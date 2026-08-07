@@ -9,5 +9,8 @@
   "dependencies": {
     "express": "^4.19.2",
     "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.2.3"
   }
 }
