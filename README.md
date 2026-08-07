@@ -1,44 +1,101 @@
-# Awaaz AI — AI-Powered Community Redressal & Predictive Civic Infrastructure Planner
+# 🏛️ Awaaz AI — AI-Powered Community Redressal & Predictive Civic Infrastructure Planner
 
-## Project Information
-• **Team Name**: CodeRush 2.0 (Pragati 2.O)  
-• **Project Title**: Awaaz AI — Smart Community Redressal Management & Predictive Civic Planner  
-• **Track/Theme**: Track 3: Sustainable Development Goals (SDG-01 & Smart Cities / Community Redressal)  
-• **Repository**: [https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner](https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner)
+> **Pragati 2.0 Hackathon | Track 3: Sustainable Development Goals (SDG-01 & Smart Cities)**  
+> **Transforming municipal grievances into explainable, prioritized, and cryptographically verified civic outcomes.**
 
 ---
 
-## Project Description
-Awaaz AI transforms municipal grievance management from a slow, opaque bureaucratic pipeline into an explainable, real-time, and privacy-first civic governance platform. 
+## 📋 Project Information
 
-### The Problem
-Traditional municipal redressal systems suffer from high friction (complex web portals, English-only text), delayed routing, duplicate complaint flooding, zero visibility for citizens on ticket progress, lack of cryptographic verification proof for completed repairs, and silent ticket closures.
-
-### The Proposed Solution
-Awaaz AI empowers citizens to report civic grievances in 30 seconds via Speech/Voice (English, Hindi, Marathi), WhatsApp simulator, or web form with automatic GPS geolocation and PII masking. The core AI engine extracts entities, computes triage urgency, clusters duplicates, and automatically dispatches tasks to ward officers with transparent Explainable AI (XAI) rationale. Field officers use an interactive Kanban Dashboard and an AI Resolution Copilot with physical computer vision before/after photo verification, SLA countdown timers, and a predictive City Digital Twin.
-
----
-
-## Technical Stack
-List of technologies used in this project:
-• **Frontend**: React 18, Vite, Tailwind CSS (Custom Light Green & Dark Slate Theme System), Chart.js, Lucide Icons, Google Maps JavaScript API v3, Web Speech Recognition API  
-• **Backend**: Node.js, Express.js REST API, Fast Natural NLP Triage Engine, YOLOv8 Object Anonymizer (Face & License Plate Masking), CLIP Visual Verification Proof  
-• **Database**: MongoDB (Mongoose ODM) with In-Memory Mock Failover Engine for zero-dependency offline evaluations  
-• **Tools/APIs**: Web Speech API, Google Maps API v3, SHA-256 Blockchain Ledger, WhatsApp Civic Simulator, Axios, PostCSS, Autoprefixer  
+| Field | Details |
+| :--- | :--- |
+| **Team Name** | **CodeRush 2.0 (Pragati 2.O)** |
+| **Project Title** | **Awaaz AI — Smart Community Redressal Management & Predictive Civic Planner** |
+| **Track / Theme** | **Track 3: Sustainable Development Goals (SDG-01: No Poverty & Sustainable Cities & Communities)** |
+| **Repository** | [https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner](https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner) |
+| **Live Local URL** | `http://localhost:3000` |
 
 ---
 
-## 👥 Team Members & Contributions
-1. **Prathamesh Mowade** ([@prathameshmowade](https://github.com/prathameshmowade)) — Full-Stack Architecture, Node/Express Backend, Google Maps Integration  
-2. **Neha Musale** ([@NehaMusale11](https://github.com/NehaMusale11)) — UI/UX Lead, React Component Hierarchy, ThemeToggle Switch & Responsive Design  
-3. **Yash K** ([@Yash-k10](https://github.com/Yash-k10)) — AI/ML Lead, NLP Triage Classification, SLA Timer Countdown Logic & Status Tracking  
-4. **Kanchan** ([@kanchan874](https://github.com/kanchan874)) — Backend Engineer, Analytics Dashboard, ErrorBoundary & WhatsApp Civic Simulator  
-5. **Dhanshree** ([@Dhanshree010](https://github.com/Dhanshree010)) — Frontend Engineer, Multi-lingual Voice Recognition, Digital Twin Map & Telemetry  
+## 💡 Project Description
+
+### 🔴 The Problem
+Traditional municipal redressal systems suffer from severe friction:
+1. **High Access Barriers**: Complex English-only forms exclude rural and non-tech-savvy citizens.
+2. **Duplicate Flooding**: Multiple citizens reporting the same pothole create massive backlog clutter without intelligent deduplication.
+3. **Opaque Bureaucracy**: Grievances disappear into silent government queues without real-time tracking or explainable routing rationale.
+4. **Zero Verification Proof**: Tickets are frequently marked "Resolved" by contractors without physical or community verification.
+5. **Reactive Governance**: Municipalities only fix failures after public outrage instead of predicting infrastructure degradation.
+
+### 🟢 The Proposed Solution
+**Awaaz AI** is a next-generation civic intelligence and redressal ecosystem:
+- **Zero-Friction Intake**: Report complaints in under 30 seconds using **Multi-Lingual Voice (English, Hindi, Marathi)**, interactive **WhatsApp Bot Simulator**, or web form with automatic GPS coordinate detection.
+- **Explainable AI (XAI) Triage**: Natural NLP computes urgency, classifies departments, extracts severity keywords, and generates transparent rationale badges.
+- **Smart Privacy & Anonymization**: Automated PII masking (Aadhaar & phone redaction) and YOLOv8 object anonymizer for uploaded photos.
+- **Field Officer Kanban & Resolution Copilot**: Live SLA countdown timers, dynamic contractor work order generator, and 3-citizen crowd consensus verification.
+- **Predictive City Digital Twin**: Ward-level infrastructure heatmap forecasting road, water, sanitation, and lighting failures before citizens complain.
+- **SHA-256 Cryptographic Audit Ledger**: Tamper-evident blockchain hash chain ensuring full provenance and eliminating silent ticket deletion.
 
 ---
 
-## Setup and Installation
-Provide instructions on how to run your project locally:
+## 🛠️ Technical Stack
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                          Awaaz AI Tech Stack                           │
+├───────────────────┬───────────────────┬────────────────────────────────┤
+│ Layer             │ Technologies      │ Purpose & Highlights           │
+├───────────────────┼───────────────────┼────────────────────────────────┤
+│ 🖥️ Frontend       │ React 18, Vite,   │ Light Green + Dark Slate Theme,│
+│                   │ Tailwind CSS      │ Mobile-First Navigation        │
+├───────────────────┼───────────────────┼────────────────────────────────┤
+│ 🗺️ Mapping & UI   │ Google Maps API,  │ Live Incident Geolocation,     │
+│                   │ Chart.js, Lucide  │ Ward Heatmaps & SLA Visuals    │
+├───────────────────┼───────────────────┼────────────────────────────────┤
+│ ⚙️ Backend API     │ Node.js,          │ Microservice Architecture,     │
+│                   │ Express.js REST   │ JSON-RPC & Controller Handlers │
+├───────────────────┼───────────────────┼────────────────────────────────┤
+│ 🧠 AI & Vision    │ Fast Natural NLP, │ Triage Urgency, Multi-Lingual  │
+│                   │ YOLOv8, CLIP Proof│ Voice Input, Photo Anonymizer  │
+├───────────────────┼───────────────────┼────────────────────────────────┤
+│ 🗄️ Database       │ MongoDB Mongoose, │ Hybrid In-Memory Mock Failover │
+│                   │ JSON Data Stores  │ for Instant Offline Demo Run   │
+├───────────────────┼───────────────────┼────────────────────────────────┤
+│ 🔒 Security       │ SHA-256 Ledger,   │ DPDP Act 2023 Compliant PII,   │
+│                   │ Regex PII Shield  │ Immutable Cryptographic Chain  │
+└───────────────────┴───────────────────┴────────────────────────────────┘
+```
+
+---
+
+## ✨ 6 Core Differentiators
+
+| # | Differentiator | Feature Description |
+| :-: | :--- | :--- |
+| 1 | **🧠 Explainable AI (XAI) Triage** | Transparent confidence scores, jurisdiction rules, and matched keywords for every routing decision. |
+| 2 | **👥 3-Citizen Crowd Consensus** | Repairs below 90% AI visual confidence require 3 neighbor citizen verifications before contractor payout. |
+| 3 | **🏙️ Predictive Digital Twin** | IoT telemetry grid simulating Ward 12 infrastructure health (Roads 62%, Water 91%, Lighting 88%). |
+| 4 | **🔒 Cryptographic SHA-256 Ledger** | Merkle tree audit logging preventing fraudulent ticket modifications or silent deletions. |
+| 5 | **🎙️ Multi-Lingual Speech AI** | Direct speech-to-text recognition in English, Hindi, and Marathi with 1-tap demo voice samples. |
+| 6 | **💬 WhatsApp Civic Assistant** | Zero-app WhatsApp complaint simulator for instant mobile citizen reporting. |
+
+---
+
+## 👥 Team Members & Roles
+
+| Avatar | Team Member | GitHub Profile | Primary Role & Contributions |
+| :-: | :--- | :--- | :--- |
+| 🏛️ | **Prathamesh Mowade** | [@prathameshmowade](https://github.com/prathameshmowade) | **Team Lead & Full-Stack Architect** — Express Backend, Google Maps Integration, Routing Architecture |
+| 👩‍💻 | **Neha Musale** | [@NehaMusale11](https://github.com/NehaMusale11) | **UI/UX Lead** — React Component Hierarchy, ThemeToggle Switch System, Responsive Mobile Layouts |
+| 👨‍💻 | **Yash K** | [@Yash-k10](https://github.com/Yash-k10) | **AI/ML Lead** — NLP Triage Engine, SLA Timer Mathematics, Tracking Timeline & Status Flow |
+| 👩‍💻 | **Kanchan** | [@kanchan874](https://github.com/kanchan874) | **Backend Engineer** — Analytics Dashboard, ErrorBoundary Resilience, WhatsApp Civic Simulator |
+| 👩‍💻 | **Dhanshree** | [@Dhanshree010](https://github.com/Dhanshree010) | **Frontend Engineer** — Multi-Lingual Voice Recognition, City Digital Twin Map, Telemetry Widgets |
+
+---
+
+## 🚀 Setup and Installation
+
+Follow these instructions to run the project locally on your machine:
 
 ### 1. Clone the repository
 ```bash
@@ -61,7 +118,6 @@ cd ..
 ### 3. Configure environment variables
 Create a `.env` file in the `server` directory (or use `.env.example` as a template):
 ```bash
-# Server Environment
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/awaaz_ai
 NODE_ENV=development
@@ -77,18 +133,28 @@ npm start
 # Backend API will run on http://localhost:5000
 ```
 
-**Terminal 2 — Start Frontend Server:**
+**Terminal 2 — Start Frontend Client:**
 ```bash
 cd client
 npm run dev
-# Frontend Client will run on http://localhost:3000
+# Frontend Client will be live on http://localhost:3000
 ```
 
 ---
 
-## 🌟 Key Innovations & Live Endpoints
-- **🏛️ Government Login & Demo SSO**: [http://localhost:3000/login](http://localhost:3000/login) (1-Click Demo Citizen & Demo Officer Access)
-- **📍 Citizen Intake & Voice AI**: [http://localhost:3000/citizen](http://localhost:3000/citizen)
-- **📋 Officer Kanban Dashboard**: [http://localhost:3000/officer](http://localhost:3000/officer)
-- **🗺️ Predictive City Digital Twin**: [http://localhost:3000/digital-twin](http://localhost:3000/digital-twin)
-- **📊 Ward SLA Analytics**: [http://localhost:3000/analytics](http://localhost:3000/analytics)
+## 🌐 Live Platform Navigation Guide
+
+| Page Route | Description | Quick Link |
+| :--- | :--- | :--- |
+| **`/`** | Overview Landing Page, KPIs, Ward 5 Telemetry, and Features | [http://localhost:3000/](http://localhost:3000/) |
+| **`/login`** | Government SSO Portal with ThemeToggle & 1-Click Demo Logins | [http://localhost:3000/login](http://localhost:3000/login) |
+| **`/citizen`** | Multi-lingual Speech & Photo Intake with GPS Geolocation | [http://localhost:3000/citizen](http://localhost:3000/citizen) |
+| **`/officer`** | Kanban Operations Board, SLA Timers, and Resolution Copilot | [http://localhost:3000/officer](http://localhost:3000/officer) |
+| **`/digital-twin`** | Predictive Ward Infrastructure Simulation & Heatmap | [http://localhost:3000/digital-twin](http://localhost:3000/digital-twin) |
+| **`/analytics`** | City-wide Resolution Metrics, Department Speed, and Audit Log | [http://localhost:3000/analytics](http://localhost:3000/analytics) |
+| **`/complaint/:id`** | Public Complaint Tracking Timeline & Cryptographic Proof | [http://localhost:3000/complaint/CMP-2026-001](http://localhost:3000/complaint/CMP-2026-001) |
+
+---
+
+## 📜 License
+This project is developed for the **CodeRush 2.0 (Pragati 2.O)** Hackathon under the **MIT License**.
