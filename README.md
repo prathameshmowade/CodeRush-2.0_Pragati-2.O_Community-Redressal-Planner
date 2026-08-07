@@ -1,77 +1,94 @@
-# CivicFlow AI-X — Smart Community Redressal Planner
-> **CodeRush 2.0 Hackathon | Track 3: Sustainable Development Goals (SDG-01)**  
-> **Team Name:** Pragati 2.O  
-> **Repository:** [CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner](https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner)
+# Awaaz AI — AI-Powered Community Redressal & Predictive Civic Infrastructure Planner
+
+## Project Information
+• **Team Name**: CodeRush 2.0 (Pragati 2.O)  
+• **Project Title**: Awaaz AI — Smart Community Redressal Management & Predictive Civic Planner  
+• **Track/Theme**: Track 3: Sustainable Development Goals (SDG-01 & Smart Cities / Community Redressal)  
+• **Repository**: [https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner](https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner)
 
 ---
 
-## 🎯 SDG-01 Problem Statement & Compliance Matrix
+## Project Description
+Awaaz AI transforms municipal grievance management from a slow, opaque bureaucratic pipeline into an explainable, real-time, and privacy-first civic governance platform. 
 
-**Problem Statement:**  
-*Build a multilingual, privacy-aware civic redressal system that turns resident complaints into deduplicated, prioritized, accountable workflows with transparent status, escalation, and measurable service-level outcomes.*
+### The Problem
+Traditional municipal redressal systems suffer from high friction (complex web portals, English-only text), delayed routing, duplicate complaint flooding, zero visibility for citizens on ticket progress, lack of cryptographic verification proof for completed repairs, and silent ticket closures.
 
-| Requirement ID | Requirement Description | CivicFlow AI-X Implementation | Source Code Link |
-| :--- | :--- | :--- | :--- |
-| **142. Intake** | Accessible web/voice/SMS intake, multilingual text (EN/HI/MR), image/audio evidence. | Voice speech-to-text, photo upload, auto-geolocation, multilingual UI. | [`CitizenPortal.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/pages/CitizenPortal.jsx), [`VoiceInput.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/components/VoiceInput.jsx) |
-| **143. Triage & Classifier** | Entity extraction, urgency, confidence scoring, semantic duplicate clustering. | FastAPI Classifier Agent & Similarity Clustering. | [`classification_agent.py`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/ai-engine/agents/classification_agent.py), [`duplicate_agent.py`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/ai-engine/agents/duplicate_agent.py) |
-| **144. Routing Engine** | Department maps, jurisdiction rules, active workload balancing, SLA & escalation. | Autonomous routing agent + load-balanced officer assignment. | [`routing_agent.py`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/ai-engine/agents/routing_agent.py), [`sla_agent.py`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/ai-engine/agents/sla_agent.py) |
-| **145. Resident View** | Reference ID, plain-language status, next step timeline, correction & privacy consent. | 5-Step visual timeline, XAI rationale, correction appeal path. | [`TrackComplaint.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/pages/TrackComplaint.jsx), [`TrackingTimeline.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/components/TrackingTimeline.jsx) |
-| **146. Operations Dashboard** | Interactive map queue, SLA breach risk, recurring hotspots, cross-dept coordination. | Kanban Operations Dashboard + Resolution Copilot + Ward Heatmap. | [`OfficerDashboard.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/pages/OfficerDashboard.jsx), [`KanbanBoard.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/components/KanbanBoard.jsx) |
-| **147. Fairness & Governance** | Accessibility checks, human-in-the-loop governance & manual override with reason. | Human Officer Approval / Override flow with XAI explanation. | [`XAIPanel.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/components/XAIPanel.jsx), [`CitizenTrustScore.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/components/CitizenTrustScore.jsx) |
-| **148. Privacy & Provenance** | Auto-redaction of Aadhaar/Phone PII, anti-doxxing, SHA-256 blockchain audit trail. | Privacy Shield regex filter + SHA-256 Cryptographic Hash Chain. | [`PrivacyShield.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/components/PrivacyShield.jsx), [`BlockchainAudit.jsx`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/client/src/components/BlockchainAudit.jsx) |
-| **156-157. Hard-Mode & Fallbacks** | Safe fallbacks for ambiguous location/priority; human review required over silent drop. | Confidence score thresholding (<70% routes to Manual Review queue). | [`routing_agent.py`](file:///d:/YCCE/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner/ai-engine/agents/routing_agent.py#L20-L40) |
+### The Proposed Solution
+Awaaz AI empowers citizens to report civic grievances in 30 seconds via Speech/Voice (English, Hindi, Marathi), WhatsApp simulator, or web form with automatic GPS geolocation and PII masking. The core AI engine extracts entities, computes triage urgency, clusters duplicates, and automatically dispatches tasks to ward officers with transparent Explainable AI (XAI) rationale. Field officers use an interactive Kanban Dashboard and an AI Resolution Copilot with physical computer vision before/after photo verification, SLA countdown timers, and a predictive City Digital Twin.
 
 ---
 
-## 🌟 Unique Selling Propositions (USPs) Beyond Expectations
-
-1. **Explainable AI (XAI) + Human Governance**: Gives officers transparent confidence scores, rules applied, and similar historical cases before taking action.
-2. **AI Resolution Copilot**: Recommends technical repair methods, estimated labor hours, and cost breakdowns directly to field officers.
-3. **AI Civic Digital Twin**: Provides dynamic infrastructure status mapping across city wards.
-4. **SHA-256 Cryptographic Audit Chain**: Prevents corruption or silent complaint deletion through tamper-evident blockchain logging.
-
----
-
-## 🏗️ Architecture & Technology Stack
-
-- **Frontend**: React 18 + Vite + Tailwind CSS
-- **Backend API**: Node.js + Express.js
-- **AI Microservice**: Python FastAPI + Gemini AI + Embeddings
-- **Database**: MongoDB / JSON File Store
-- **Security & Audit**: SHA-256 Hash Chain + Regex PII Filter
+## Technical Stack
+List of technologies used in this project:
+• **Frontend**: React 18, Vite, Tailwind CSS (Custom Light Green & Dark Slate Theme System), Chart.js, Lucide Icons, Google Maps JavaScript API v3, Web Speech Recognition API  
+• **Backend**: Node.js, Express.js REST API, Fast Natural NLP Triage Engine, YOLOv8 Object Anonymizer (Face & License Plate Masking), CLIP Visual Verification Proof  
+• **Database**: MongoDB (Mongoose ODM) with In-Memory Mock Failover Engine for zero-dependency offline evaluations  
+• **Tools/APIs**: Web Speech API, Google Maps API v3, SHA-256 Blockchain Ledger, WhatsApp Civic Simulator, Axios, PostCSS, Autoprefixer  
 
 ---
 
-## 👥 Pragati 2.O Team Profiles & Contributions
-
-1. **[prathameshmowade](https://github.com/prathameshmowade)** — Team Lead / Full-Stack & System Architecture
-2. **[NehaMusale11](https://github.com/NehaMusale11)** — Frontend Lead / React Pages & Workflow
-3. **[Yash-k10](https://github.com/Yash-k10)** — AI/ML Lead / FastAPI Agents & Models
-4. **[kanchan874](https://github.com/kanchan874)** — Backend Developer / Controllers, SLA & Analytics
-5. **[Dhanshree010](https://github.com/Dhanshree010)** — UI/UX Designer / Digital Twin, Documentation & Assets
+## 👥 Team Members & Contributions
+1. **Prathamesh Mowade** ([@prathameshmowade](https://github.com/prathameshmowade)) — Full-Stack Architecture, Node/Express Backend, Google Maps Integration  
+2. **Neha Musale** ([@NehaMusale11](https://github.com/NehaMusale11)) — UI/UX Lead, React Component Hierarchy, ThemeToggle Switch & Responsive Design  
+3. **Yash K** ([@Yash-k10](https://github.com/Yash-k10)) — AI/ML Lead, NLP Triage Classification, SLA Timer Countdown Logic & Status Tracking  
+4. **Kanchan** ([@kanchan874](https://github.com/kanchan874)) — Backend Engineer, Analytics Dashboard, ErrorBoundary & WhatsApp Civic Simulator  
+5. **Dhanshree** ([@Dhanshree010](https://github.com/Dhanshree010)) — Frontend Engineer, Multi-lingual Voice Recognition, Digital Twin Map & Telemetry  
 
 ---
 
-## 🚀 Quick Start Guide
+## Setup and Installation
+Provide instructions on how to run your project locally:
 
-### 1. Backend Server
+### 1. Clone the repository
 ```bash
-cd server
-npm install
-npm run dev
+git clone https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner.git
+cd CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner
 ```
 
-### 2. AI Engine
+### 2. Install dependencies
 ```bash
-cd ai-engine
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-```
-
-### 3. Frontend Application
-```bash
+# Install frontend client dependencies
 cd client
 npm install
-npm run dev
+
+# Install backend server dependencies
+cd ../server
+npm install
+cd ..
 ```
 
+### 3. Configure environment variables
+Create a `.env` file in the `server` directory (or use `.env.example` as a template):
+```bash
+# Server Environment
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/awaaz_ai
+NODE_ENV=development
+```
+
+### 4. Start the development server
+Open two terminal windows:
+
+**Terminal 1 — Start Backend Server:**
+```bash
+cd server
+npm start
+# Backend API will run on http://localhost:5000
+```
+
+**Terminal 2 — Start Frontend Server:**
+```bash
+cd client
+npm run dev
+# Frontend Client will run on http://localhost:3000
+```
+
+---
+
+## 🌟 Key Innovations & Live Endpoints
+- **🏛️ Government Login & Demo SSO**: [http://localhost:3000/login](http://localhost:3000/login) (1-Click Demo Citizen & Demo Officer Access)
+- **📍 Citizen Intake & Voice AI**: [http://localhost:3000/citizen](http://localhost:3000/citizen)
+- **📋 Officer Kanban Dashboard**: [http://localhost:3000/officer](http://localhost:3000/officer)
+- **🗺️ Predictive City Digital Twin**: [http://localhost:3000/digital-twin](http://localhost:3000/digital-twin)
+- **📊 Ward SLA Analytics**: [http://localhost:3000/analytics](http://localhost:3000/analytics)
