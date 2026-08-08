@@ -57,3 +57,5 @@ Desktop.ini
 # Coverage & test output
 coverage/
 .nyc_output/
+.vercel
+.env*

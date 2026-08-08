@@ -75,24 +75,42 @@ export default function OfficerDashboard() {
   };
 
   const loadComplaints = async () => {
+    let localSaved = [];
+    try {
+      const saved = localStorage.getItem('civic_officer_complaints');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) localSaved = parsed;
+      }
+    } catch (e) {}
+
     try {
       const res = await axios.get('/api/complaints');
-      if (res.data && res.data.data && res.data.data.length > 0) {
-        const serverData = res.data.data;
-        // Merge server data with local status overrides for 'Pending Verification'
+      let serverData = [];
+      if (Array.isArray(res.data)) {
+        serverData = res.data;
+      } else if (res.data && Array.isArray(res.data.data)) {
+        serverData = res.data.data;
+      }
+
+      if (serverData.length > 0) {
         setComplaints((prevLocal) => {
-          const localMap = new Map(prevLocal.map((c) => [c.complaintId, c]));
+          const baseList = prevLocal.length > 0 ? prevLocal : localSaved.length > 0 ? localSaved : FALLBACK_MOCK;
+          const localMap = new Map(baseList.map((c) => [c.complaintId || c._id, c]));
+
           const merged = serverData.map((serverComp) => {
-            const localComp = localMap.get(serverComp.complaintId);
+            const id = serverComp.complaintId || serverComp._id;
+            const localComp = localMap.get(id);
             if (localComp && localComp.status === 'Pending Verification' && serverComp.status !== 'Verified & Resolved') {
               return { ...serverComp, ...localComp, status: 'Pending Verification' };
             }
-            return serverComp;
+            return localComp ? { ...serverComp, ...localComp } : serverComp;
           });
 
-          // Ensure local-only tickets are preserved
-          prevLocal.forEach((lComp) => {
-            if (!merged.find((m) => m.complaintId === lComp.complaintId)) {
+          // Ensure all local new complaints are retained at top
+          baseList.forEach((lComp) => {
+            const id = lComp.complaintId || lComp._id;
+            if (!merged.find((m) => (m.complaintId || m._id) === id)) {
               merged.unshift(lComp);
             }
           });
@@ -103,15 +121,19 @@ export default function OfficerDashboard() {
 
           return merged;
         });
+      } else if (localSaved.length > 0) {
+        setComplaints(localSaved);
       }
     } catch (err) {
-      console.warn('API connection fallback, using local mock store:', err);
+      if (localSaved.length > 0) {
+        setComplaints(localSaved);
+      }
     }
   };
 
   const handleStatusChange = async (complaintId, newStatus) => {
     if (newStatus === 'Resolved') {
-      const target = complaints.find((c) => c.complaintId === complaintId);
+      const target = complaints.find((c) => (c.complaintId || c._id) === complaintId);
       if (target) {
         setResolvingComplaint(target);
         return;
@@ -122,13 +144,17 @@ export default function OfficerDashboard() {
       await axios.patch(`/api/complaints/${complaintId}/status`, { status: newStatus });
     } catch (err) {}
 
-    const updated = complaints.map((c) => (c.complaintId === complaintId ? { ...c, status: newStatus } : c));
+    const updated = complaints.map((c) =>
+      (c.complaintId || c._id) === complaintId ? { ...c, status: newStatus } : c
+    );
     saveComplaintsLocally(updated);
   };
 
   const handleResolutionSubmit = async (resolutionPayload) => {
     const startedAt = new Date().toISOString();
-    const finalStatus = resolutionPayload.status || (resolutionPayload.aiSimilarityScore >= 90 ? 'Verified & Resolved' : 'Pending Verification');
+    const finalStatus =
+      resolutionPayload.status ||
+      (resolutionPayload.aiSimilarityScore >= 90 ? 'Verified & Resolved' : 'Pending Verification');
 
     try {
       await axios.patch(`/api/complaints/${resolutionPayload.complaintId}/status`, {
@@ -141,22 +167,41 @@ export default function OfficerDashboard() {
       });
     } catch (err) {}
 
-    const updated = complaints.map((c) =>
-      c.complaintId === resolutionPayload.complaintId
-        ? {
-            ...c,
-            status: finalStatus,
-            resolutionProof: resolutionPayload.resolutionProof,
-            resolutionNotes: resolutionPayload.resolutionNotes,
-            aiSimilarityScore: resolutionPayload.aiSimilarityScore,
-            verifications: finalStatus === 'Verified & Resolved' ? (c.verifications?.length >= 3 ? c.verifications : [{ citizenName: 'AI Vision Match (≥90%)', comment: `Auto-verified via AI image similarity (${resolutionPayload.aiSimilarityScore}% match)`, verifiedAt: startedAt }, { citizenName: 'System Audit', comment: 'Direct AI Verification Passed', verifiedAt: startedAt }, { citizenName: 'Automated Certification', comment: 'Quality threshold met', verifiedAt: startedAt }]) : (c.verifications || []),
-            verificationsCount: finalStatus === 'Verified & Resolved' ? 3 : (c.verificationsCount || 0),
-            requiredVerifications: 3,
-            pendingVerificationStartedAt: c.pendingVerificationStartedAt || startedAt,
-            verificationWindowDays: 7
-          }
-        : c
-    );
+    const updated = complaints.map((c) => {
+      const id = c.complaintId || c._id;
+      if (id === resolutionPayload.complaintId) {
+        return {
+          ...c,
+          status: finalStatus,
+          resolutionProof: resolutionPayload.resolutionProof,
+          resolutionNotes: resolutionPayload.resolutionNotes,
+          aiSimilarityScore: resolutionPayload.aiSimilarityScore,
+          verifications:
+            finalStatus === 'Verified & Resolved'
+              ? c.verifications?.length >= 3
+                ? c.verifications
+                : [
+                    {
+                      citizenName: 'AI Vision Match (≥90%)',
+                      comment: `Auto-verified via AI image similarity (${resolutionPayload.aiSimilarityScore}% match)`,
+                      verifiedAt: startedAt
+                    },
+                    { citizenName: 'System Audit', comment: 'Direct AI Verification Passed', verifiedAt: startedAt },
+                    {
+                      citizenName: 'Automated Certification',
+                      comment: 'Quality threshold met',
+                      verifiedAt: startedAt
+                    }
+                  ]
+              : c.verifications || [],
+          verificationsCount: finalStatus === 'Verified & Resolved' ? 3 : c.verificationsCount || 0,
+          requiredVerifications: 3,
+          pendingVerificationStartedAt: c.pendingVerificationStartedAt || startedAt,
+          verificationWindowDays: 7
+        };
+      }
+      return c;
+    });
 
     saveComplaintsLocally(updated);
     setResolvingComplaint(null);
@@ -164,13 +209,14 @@ export default function OfficerDashboard() {
 
   useEffect(() => {
     loadComplaints();
-    const interval = setInterval(loadComplaints, 2000);
+    const interval = setInterval(loadComplaints, 3000);
 
-    const handleStorageChange = (e) => {
-      if (e.key === 'civic_officer_complaints' && e.newValue) {
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem('civic_officer_complaints');
+      if (saved) {
         try {
-          const parsed = JSON.parse(e.newValue);
-          if (Array.isArray(parsed)) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
             setComplaints(parsed);
           }
         } catch (err) {}
@@ -186,114 +232,60 @@ export default function OfficerDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Page Header */}
-      <div className="bg-white p-6 md:p-8 rounded-2xl border border-emerald-100 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>OFFICER TRIAGE DASHBOARD</span>
-            <span className="text-emerald-300">•</span>
-            <span>NAGPUR MUNICIPAL ZONE</span>
-          </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-950 flex items-center gap-2.5">
-            <LayoutDashboard className="w-7 h-7 text-emerald-600" />
-            <span>Municipal Operations Command</span>
-          </h1>
-          <p className="text-emerald-800 text-xs md:text-sm">
-            Er. Rajesh Sharma • Head Officer, Roads & Infrastructure Department
-          </p>
-        </div>
-
-        <div className="w-full md:w-auto">
-          <SLATimer hoursRemaining={34} totalHours={48} />
-        </div>
-      </div>
-
-      {/* Section 1: Grievance Triage Kanban Board (Full Width Top Flow) */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-1 pb-2 border-b border-emerald-100">
-          <div>
-            <h2 className="text-lg font-extrabold text-emerald-950 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-emerald-600" />
-              <span>Grievance Triage Kanban Flow</span>
-            </h2>
-            <p className="text-xs text-emerald-800">5-Stage Municipal Lifecycle • Drag or click cards to inspect AI Copilot specs</p>
-          </div>
-          <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            5 Active Telemetry Columns
-          </span>
-        </div>
-
-        <KanbanBoard
-          complaints={complaints}
-          onSelect={(c) => setSelected(c)}
-          onStatusChange={handleStatusChange}
-        />
-      </div>
-
-      {/* Section 2: Selected Ticket Inspection & AI Copilot Grid (3 Columns Below Flow) */}
-      <div className="space-y-4 pt-4 border-t border-emerald-100">
-        <div className="flex items-center justify-between">
-          <h3 className="text-base font-extrabold text-emerald-950 uppercase tracking-wider">
-            Ticket AI Diagnostics & Copilot Inspector
-          </h3>
-          {selected && (
-            <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
-              Inspecting: {selected.complaintId}
-            </span>
-          )}
-        </div>
-
-        {selected ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-            {/* Column 1: Ticket Overview */}
-            <div className="bg-white p-6 rounded-2xl border border-emerald-100 space-y-4 shadow-xs">
-              <div className="flex justify-between items-center pb-2 border-b border-emerald-100">
-                <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
-                  {selected.complaintId}
-                </span>
-                <span className="text-xs font-bold text-emerald-950 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-100">
-                  {selected.category}
-                </span>
-              </div>
-              <div className="space-y-1">
-                <h4 className="font-extrabold text-emerald-950 text-base">{selected.title}</h4>
-                <p className="text-xs text-emerald-800 leading-relaxed">{selected.description}</p>
-              </div>
-
-              {selected.resolutionProof && (
-                <div className="pt-2 border-t border-emerald-100 space-y-1.5">
-                  <span className="text-xs font-bold text-emerald-950 block">Officer Resolution Photo Proof:</span>
-                  <img src={selected.resolutionProof} alt="Proof" className="w-full h-36 object-cover rounded-xl border border-emerald-200 shadow-xs" />
-                  {selected.resolutionNotes && (
-                    <p className="text-[11px] text-emerald-800 bg-emerald-50 p-2.5 rounded-lg border border-emerald-100 italic">
-                      "{selected.resolutionNotes}"
-                    </p>
-                  )}
-                </div>
-              )}
+      {/* Officer Header Card */}
+      <div className="bg-white p-6 md:p-8 rounded-2xl border border-emerald-100 shadow-xs space-y-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>NAGPUR MUNICIPAL CORPORATION • ZONE 12</span>
             </div>
-
-            {/* Column 2: Explainable AI Rationale Panel */}
-            <XAIPanel xaiData={selected.xaiData} />
-
-            {/* Column 3: AI Resolution Copilot Engine */}
-            <ResolutionCopilot />
+            <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-950 flex items-center gap-2.5">
+              <LayoutDashboard className="w-7 h-7 text-emerald-600" />
+              <span>Officer Triage & Work Order Dashboard</span>
+            </h1>
+            <p className="text-emerald-800 text-xs md:text-sm">
+              Logged in as <strong className="text-emerald-950">Er. Rajesh Sharma</strong> (Superintending Engineer, Roads & Drainage)
+            </p>
           </div>
-        ) : (
-          <div className="bg-white p-8 rounded-2xl border border-emerald-100 text-center space-y-2">
-            <AlertCircle className="w-8 h-8 text-emerald-400 mx-auto" />
-            <p className="text-xs text-emerald-800">Select any grievance card above to inspect AI Copilot recommendations.</p>
+
+          <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl text-xs">
+            <Clock className="w-4 h-4 text-emerald-600" />
+            <span className="font-bold text-emerald-900">{complaints.length} Total Grievances Active</span>
           </div>
-        )}
+        </div>
       </div>
 
-      {/* Resolution Photo Proof Modal */}
+      {/* SLA Countdown Timer Bar */}
+      <SLATimer targetTime={new Date(Date.now() + 18 * 3600 * 1000).toISOString()} />
+
+      {/* Main 5-Stage Kanban Board */}
+      <KanbanBoard
+        complaints={complaints}
+        onSelect={(c) => setSelected(c)}
+        onStatusChange={handleStatusChange}
+      />
+
+      {/* Agentic Dispatch Copilot */}
+      <ResolutionCopilot />
+
+      {/* Selected Complaint Explainable AI View */}
+      {selected && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 uppercase tracking-wider">
+            <AlertCircle className="w-4 h-4 text-emerald-600" />
+            <span>Detailed AI Triage Rationale for Selected Ticket ({selected.complaintId || selected._id}):</span>
+          </div>
+          <XAIPanel xaiData={selected.xaiData} />
+        </div>
+      )}
+
+      {/* Photo Proof Upload Modal */}
       {resolvingComplaint && (
         <ResolutionProofModal
           complaint={resolvingComplaint}
           onClose={() => setResolvingComplaint(null)}
-          onSubmitResolution={handleResolutionSubmit}
+          onSubmit={handleResolutionSubmit}
         />
       )}
     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import KanbanCard from './KanbanCard';
-import { Users, Award, ShieldCheck } from 'lucide-react';
+import { Users, Award } from 'lucide-react';
 
 const COLS = ['New', 'Assigned', 'In Progress', 'Pending Verification', 'Resolved'];
 
@@ -55,13 +55,24 @@ export default function KanbanBoard({ complaints = [], onSelect, onStatusChange 
         {COLS.map((col) => {
           const colComplaints = complaints.filter((c) => {
             const count = c.verificationsCount || (c.verifications ? c.verifications.length : 0);
+            const status = (c.status || 'New').trim();
+
             if (col === 'Resolved') {
-              return c.status === 'Resolved' || c.status === 'Verified & Resolved' || c.status === 'Completed' || count >= 3;
+              return status === 'Resolved' || status === 'Verified & Resolved' || status === 'Completed' || count >= 3;
             }
             if (col === 'Pending Verification') {
-              return c.status === 'Pending Verification' && count < 3;
+              return status === 'Pending Verification' && count < 3;
             }
-            return c.status === col;
+            if (col === 'In Progress') {
+              return status === 'In Progress' || status === 'In-Progress';
+            }
+            if (col === 'Assigned') {
+              return status === 'Assigned';
+            }
+            if (col === 'New') {
+              return status === 'New' || status === 'new' || (!['Assigned', 'In Progress', 'In-Progress', 'Pending Verification', 'Resolved', 'Verified & Resolved', 'Completed'].includes(status) && count < 3);
+            }
+            return false;
           });
 
           return (
@@ -78,10 +89,10 @@ export default function KanbanBoard({ complaints = [], onSelect, onStatusChange 
               <div className="space-y-3">
                 {colComplaints.map((c) => (
                   <KanbanCard
-                    key={c.complaintId}
+                    key={c.complaintId || c._id}
                     complaint={c}
-                    onSelect={onSelect}
-                    onStatusChange={onStatusChange}
+                    onClick={() => onSelect?.(c)}
+                    onStatusChange={(newStatus) => onStatusChange?.(c.complaintId || c._id, newStatus)}
                   />
                 ))}
               </div>

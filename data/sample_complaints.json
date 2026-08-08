@@ -1,5 +1,35 @@
 [
   {
+    "complaintId": "CMP-2026-005",
+    "title": "Severe road pothole near ABC School in Laxmi ...Pothole near ABC School",
+    "description": "Severe road pothole near ABC School in Laxmi Nagar causing traffic accidents.",
+    "category": "Water Supply",
+    "urgency": "High",
+    "status": "New",
+    "department": "DEPT_ROAD",
+    "confidenceScore": 96,
+    "slaHoursTotal": 48,
+    "slaHoursRemaining": 48,
+    "impactScore": 93,
+    "isDuplicate": false,
+    "blockchainHash": "933704102b783180e3106c87ba49a62cc495aa6f3f4c8286ee010db4ab81a829",
+    "xaiExplanation": {
+      "confidence": 95,
+      "reasoning": [
+        "Category keywords matched in Water Supply",
+        "Mapped to Civic Jurisdiction"
+      ],
+      "rulesApplied": [
+        "School & Hospital Proximity Priority Rule"
+      ],
+      "similarCases": [
+        "CMP-2025-8891",
+        "CMP-2025-9102"
+      ]
+    },
+    "createdAt": "2026-08-07T23:24:06.992Z"
+  },
+  {
     "complaintId": "CMP-2026-004",
     "title": "Broken pipeline near Central Market",
     "description": "Water gushing out of pipe for 2 days. Phone: [REDACTED_PHONE]",
