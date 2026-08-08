@@ -4,6 +4,7 @@ import { LanguageContext } from '../context/LanguageContext';
 import ComplaintForm from '../components/ComplaintForm';
 import VoiceInput from '../components/VoiceInput';
 import GeoTagCamera from '../components/GeoTagCamera';
+import ImageUpload from '../components/ImageUpload';
 import LocationPicker from '../components/LocationPicker';
 import PrivacyShield from '../components/PrivacyShield';
 import {
@@ -183,6 +184,9 @@ export default function CitizenPortal() {
                 }}
               />
             </div>
+
+            {/* Traditional File Upload (YOLOv8 Protected) */}
+            <ImageUpload />
           </div>
 
           {/* Section 3: Grievance Form Details & Submit */}
