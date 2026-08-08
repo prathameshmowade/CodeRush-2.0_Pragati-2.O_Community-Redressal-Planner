@@ -19,7 +19,7 @@ const SAMPLE_PROOF_PRESETS = [
   }
 ];
 
-export default function ResolutionProofModal({ complaint, onClose, onSubmitResolution }) {
+export default function ResolutionProofModal({ complaint, onClose, onSubmitResolution, onSubmit }) {
   const [photoUrl, setPhotoUrl] = useState(SAMPLE_PROOF_PRESETS[0].url);
   const [notes, setNotes] = useState(SAMPLE_PROOF_PRESETS[0].desc);
   const [loading, setLoading] = useState(false);
@@ -52,14 +52,20 @@ export default function ResolutionProofModal({ complaint, onClose, onSubmitResol
 
     const isAutoVerified = aiSimilarityScore >= 90;
     const finalStatus = isAutoVerified ? 'Verified & Resolved' : 'Pending Verification';
+    const compId = complaint.complaintId || complaint._id;
 
-    await onSubmitResolution({
-      complaintId: complaint.complaintId,
+    const payload = {
+      complaintId: compId,
       resolutionProof: photoUrl,
       resolutionNotes: notes,
       aiSimilarityScore,
       status: finalStatus
-    });
+    };
+
+    const submitCallback = onSubmitResolution || onSubmit;
+    if (submitCallback) {
+      await submitCallback(payload);
+    }
 
     setLoading(false);
   };

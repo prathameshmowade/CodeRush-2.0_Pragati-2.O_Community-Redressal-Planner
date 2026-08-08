@@ -1,5 +1,35 @@
 [
   {
+    "complaintId": "CMP-2026-006",
+    "title": "Water pipeline burst near Rajiv Gandhi Park",
+    "description": "Huge water pressure leakage flooding main road",
+    "category": "Water Supply",
+    "urgency": "High Priority",
+    "status": "New",
+    "department": "DEPT_ROAD",
+    "confidenceScore": 94,
+    "slaHoursTotal": 48,
+    "slaHoursRemaining": 48,
+    "impactScore": 93,
+    "isDuplicate": false,
+    "blockchainHash": "b2c1d6d06195893885fe52ce86025e13a1deac223d187181c0c2c5daf202fb00",
+    "xaiExplanation": {
+      "confidence": 95,
+      "reasoning": [
+        "Category keywords matched in Water Supply",
+        "Mapped to Civic Jurisdiction"
+      ],
+      "rulesApplied": [
+        "School & Hospital Proximity Priority Rule"
+      ],
+      "similarCases": [
+        "CMP-2025-8891",
+        "CMP-2025-9102"
+      ]
+    },
+    "createdAt": "2026-08-08T00:25:18.248Z"
+  },
+  {
     "complaintId": "CMP-2026-005",
     "title": "Severe road pothole near ABC School in Laxmi ...Pothole near ABC School",
     "description": "Severe road pothole near ABC School in Laxmi Nagar causing traffic accidents.",

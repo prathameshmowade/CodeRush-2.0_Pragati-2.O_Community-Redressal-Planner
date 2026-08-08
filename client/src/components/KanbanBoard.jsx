@@ -91,8 +91,10 @@ export default function KanbanBoard({ complaints = [], onSelect, onStatusChange 
                   <KanbanCard
                     key={c.complaintId || c._id}
                     complaint={c}
-                    onClick={() => onSelect?.(c)}
-                    onStatusChange={(newStatus) => onStatusChange?.(c.complaintId || c._id, newStatus)}
+                    onSelect={() => onSelect?.(c)}
+                    onStatusChange={(targetId, newStatus) => {
+                      onStatusChange?.(targetId || c.complaintId || c._id, newStatus);
+                    }}
                   />
                 ))}
               </div>

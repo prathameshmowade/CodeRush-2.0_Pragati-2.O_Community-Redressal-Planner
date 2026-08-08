@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import StatusBadge from './StatusBadge';
-import { ThumbsUp, MapPin, Sparkles, Camera, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { ThumbsUp, MapPin, Sparkles, Camera, CheckCircle2, Play } from 'lucide-react';
 
 export default function KanbanCard({ complaint, onSelect, onStatusChange }) {
   const [upvotes, setUpvotes] = useState(complaint.upvotes || Math.floor(Math.random() * 20) + 5);
@@ -14,7 +14,18 @@ export default function KanbanCard({ complaint, onSelect, onStatusChange }) {
     }
   };
 
+  const compId = complaint.complaintId || complaint._id;
   const verificationsCount = complaint.verificationsCount || (complaint.verifications ? complaint.verifications.length : 0);
+
+  const handleStartWork = (e) => {
+    e.stopPropagation();
+    onStatusChange?.(compId, 'In Progress');
+  };
+
+  const handleMarkSolved = (e) => {
+    e.stopPropagation();
+    onStatusChange?.(compId, 'Resolved');
+  };
 
   return (
     <div
@@ -24,7 +35,7 @@ export default function KanbanCard({ complaint, onSelect, onStatusChange }) {
       {/* Header Row */}
       <div className="flex justify-between items-center">
         <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-          {complaint.complaintId}
+          {compId}
         </span>
         <StatusBadge status={complaint.status} />
       </div>
@@ -70,7 +81,7 @@ export default function KanbanCard({ complaint, onSelect, onStatusChange }) {
       <div className="flex items-center justify-between pt-2 border-t border-emerald-100 text-[11px]">
         <span className="text-emerald-800 font-medium flex items-center gap-1">
           <MapPin className="w-3 h-3 text-emerald-600" />
-          <span>{complaint.location?.address || 'Nagpur Central'}</span>
+          <span>{complaint.location?.address || complaint.location || 'Nagpur Central'}</span>
         </span>
         <span className="text-emerald-700 font-bold flex items-center gap-1">
           <Sparkles className="w-3 h-3 text-emerald-600" />
@@ -94,27 +105,22 @@ export default function KanbanCard({ complaint, onSelect, onStatusChange }) {
         </button>
 
         {onStatusChange && (
-          <div className="flex flex-wrap gap-1 items-center">
+          <div className="flex flex-wrap gap-1.5 items-center">
             {complaint.status !== 'In Progress' && complaint.status !== 'Pending Verification' && complaint.status !== 'Resolved' && complaint.status !== 'Verified & Resolved' && (
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onStatusChange(complaint.complaintId, 'In Progress');
-                }}
-                className="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded-lg transition border border-emerald-200 whitespace-nowrap"
+                onClick={handleStartWork}
+                className="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-lg transition border border-emerald-200 whitespace-nowrap flex items-center gap-1"
               >
-                Start
+                <Play className="w-3 h-3 text-emerald-600" />
+                <span>Start</span>
               </button>
             )}
             {complaint.status !== 'Pending Verification' && complaint.status !== 'Resolved' && complaint.status !== 'Verified & Resolved' && (
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onStatusChange(complaint.complaintId, 'Resolved');
-                }}
-                className="text-[10px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2 py-1 rounded-lg transition flex items-center gap-1 shadow-xs whitespace-nowrap"
+                onClick={handleMarkSolved}
+                className="text-[10px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1 rounded-lg transition flex items-center gap-1 shadow-xs whitespace-nowrap"
               >
                 <Camera className="w-3 h-3" />
                 <span>Mark Solved</span>
