@@ -54,9 +54,9 @@ const TRANSLATIONS = {
     // Citizen Portal
     citizen_portal_badge: 'RESIDENT INTAKE PORTAL • PRIVACY SHIELD PROTECTED',
     citizen_title: 'Submit a Civic Grievance',
-    citizen_desc: 'Report road damage, water leakages, sanitation, streetlights, or safety hazards using voice speech or text in your preferred language.',
+    citizen_desc: 'Report road damage, water leakages, sanitation, streetlights, or safety hazards using voice speech, live geo-tag camera, or text in your preferred language.',
     citizen_voice_step: '1. Voice Speech-to-Text (Hindi / Marathi / English)',
-    citizen_loc_step: '2. Location Pinpoint & Photo Proof Upload',
+    citizen_loc_step: '2. Location Pinpoint & Live Geo-Tag Camera Evidence',
     citizen_form_step: '3. Grievance Submission Form',
     citizen_submit_btn: 'Submit Grievance with AI Triage',
     citizen_submitting: 'Submitting with AI Triage...',
@@ -74,7 +74,14 @@ const TRANSLATIONS = {
     loc_detecting: 'Locating...',
     loc_current: 'Selected Location:',
     
-    // Image Upload & YOLO
+    // Geo-Tag Camera & Image Upload
+    geotag_cam_title: 'Live Geo-Tag Camera & Evidence Capture',
+    geotag_cam_sub: 'Take a live photo with automatic GPS coordinates, timestamp, and Nagpur Municipal watermark burned directly onto the image.',
+    geotag_open_btn: '📸 Open Live Geo-Tag Camera',
+    geotag_snap_btn: 'Snap Geo-Tagged Photo',
+    geotag_retake_btn: 'Retake Photo',
+    geotag_use_btn: 'Use Geo-Tagged Photo',
+    geotag_presets: 'Or Choose Verified Geo-Tagged Presets:',
     img_title: 'Evidence Photo Upload (YOLOv8 Shield Protected)',
     img_sub: 'Drop or select site photo. Faces and vehicle number plates are automatically blurred before submission.',
     img_drag_drop: 'Drag and drop grievance photo here, or browse files',
@@ -210,9 +217,9 @@ const TRANSLATIONS = {
     // Citizen Portal
     citizen_portal_badge: 'नागरिक शिकायत पोर्टल • गोपनीयता सुरक्षा कवच सक्रिय',
     citizen_title: 'नागरिक शिकायत दर्ज करें',
-    citizen_desc: 'सड़क गड्ढे, पानी लीकेज, कचरा, स्ट्रीटलाइट या सुरक्षा संबंधी समस्याओं को अपनी पसंदीदा भाषा में बोलकर या लिखकर दर्ज करें।',
+    citizen_desc: 'सड़क गड्ढे, पानी लीकेज, कचरा, स्ट्रीटलाइट या सुरक्षा संबंधी समस्याओं को अपनी पसंदीदा भाषा में बोलकर, लाइव जियो-टैग कैमरे से फोटो खींचकर या लिखकर दर्ज करें।',
     citizen_voice_step: '1. आवाज़ द्वारा बोलकर लिखें (हिंदी / मराठी / English)',
-    citizen_loc_step: '2. स्थान चयन व स्थल फोटो प्रमाण अपलोड',
+    citizen_loc_step: '2. स्थान चयन व लाइव जियो-टैग कैमरा साक्ष्य फोटो',
     citizen_form_step: '3. नागरिक शिकायत प्रपत्र',
     citizen_submit_btn: 'एआई प्राथमिकता के साथ शिकायत दर्ज करें',
     citizen_submitting: 'एआई विश्लेषण के साथ दर्ज हो रहा है...',
@@ -230,7 +237,14 @@ const TRANSLATIONS = {
     loc_detecting: 'स्थान खोज रहे हैं...',
     loc_current: 'चयनित स्थान:',
     
-    // Image Upload & YOLO
+    // Geo-Tag Camera & Image Upload
+    geotag_cam_title: 'लाइव जियो-टैग कैमरा व साक्ष्य फोटो',
+    geotag_cam_sub: 'लाइव कैमरा से फोटो लें जिसमें स्वतः सटीक जीपीएस निर्देशांक (Lat/Long), समय व नगर निगम का आधिकारिक वॉटरमार्क मुद्रित होता है।',
+    geotag_open_btn: '📸 लाइव जियो-टैग कैमरा खोलें',
+    geotag_snap_btn: 'जियो-टैग फोटो खींचें',
+    geotag_retake_btn: 'दोबारा फोटो लें',
+    geotag_use_btn: 'यह जियो-टैग्ड फोटो उपयोग करें',
+    geotag_presets: 'या सत्यापित जियो-टैग्ड नमूना फोटो चुनें:',
     img_title: 'स्थल फोटो प्रमाण (YOLOv8 गोपनीयता रक्षक)',
     img_sub: 'समस्या का फोटो अपलोड करें। नागरिकों के चेहरे और वाहनों की नंबर प्लेट स्वतः धुंधली (Blur) कर दी जाती हैं।',
     img_drag_drop: 'यहाँ फोटो खींचकर छोड़ें या फाइल चुनें',

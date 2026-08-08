@@ -3,14 +3,16 @@ import axios from 'axios';
 import { LanguageContext } from '../context/LanguageContext';
 import ComplaintForm from '../components/ComplaintForm';
 import VoiceInput from '../components/VoiceInput';
-import ImageUpload from '../components/ImageUpload';
+import GeoTagCamera from '../components/GeoTagCamera';
 import LocationPicker from '../components/LocationPicker';
 import PrivacyShield from '../components/PrivacyShield';
 import {
   FileEdit,
   ShieldCheck,
   CheckCircle2,
-  PlusCircle
+  PlusCircle,
+  MapPin,
+  Camera
 } from 'lucide-react';
 
 export default function CitizenPortal() {
@@ -18,6 +20,7 @@ export default function CitizenPortal() {
   const [submitted, setSubmitted] = useState(null);
   const [voiceText, setVoiceText] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('Laxmi Nagar, Nagpur');
+  const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleComplaintSubmit = async (formData) => {
@@ -30,6 +33,7 @@ export default function CitizenPortal() {
       description: formData.description || '',
       category: formData.category || 'Road Damage',
       location: formData.location || selectedLocation || 'Laxmi Nagar, Nagpur',
+      evidencePhoto: capturedPhoto || 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=700&auto=format&fit=crop&q=80',
       urgency: 'High Priority',
       status: 'New',
       confidenceScore: 96,
@@ -43,9 +47,10 @@ export default function CitizenPortal() {
         reasoning: [
           `Category keywords matched for ${formData.category || 'Road Damage'}`,
           `Mapped to ${formData.location || selectedLocation || 'Laxmi Nagar, Nagpur'} Zone Jurisdiction`,
-          'School & Hospital Zone Priority Rule Applied'
+          'School & Hospital Zone Priority Rule Applied',
+          'Geo-Tagged Photographic Evidence Authenticated'
         ],
-        rulesApplied: ['Emergency Redressal Priority Rule'],
+        rulesApplied: ['Emergency Redressal Priority Rule', 'Geo-Tagged Photo Verification Rule'],
         similarCases: ['CMP-2025-8891', 'CMP-2025-9102']
       },
       createdAt: new Date().toISOString()
@@ -155,10 +160,29 @@ export default function CitizenPortal() {
             <VoiceInput onTranscript={(text) => setVoiceText(text)} />
           </div>
 
-          {/* Section 2: Location & Evidence Upload */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <LocationPicker onSelect={(loc) => setSelectedLocation(loc)} />
-            <ImageUpload />
+          {/* Section 2: Location Pinpoint & Live Geo-Tag Camera */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-emerald-50 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-300 font-bold text-xs flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
+                2
+              </span>
+              <h2 className="text-lg font-bold text-emerald-950 dark:text-white">{t('citizen_loc_step')}</h2>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Google Maps Geolocation */}
+              <LocationPicker onSelect={(loc) => setSelectedLocation(loc)} />
+
+              {/* Live Geo-Tag Camera with Watermark & YOLOv8 Privacy Blur */}
+              <GeoTagCamera
+                onCapture={(anonymizedImg, originalImg) => {
+                  setCapturedPhoto(anonymizedImg || originalImg);
+                }}
+                onLocationDetected={(detectedLoc) => {
+                  if (detectedLoc) setSelectedLocation(detectedLoc);
+                }}
+              />
+            </div>
           </div>
 
           {/* Section 3: Grievance Form Details & Submit */}
