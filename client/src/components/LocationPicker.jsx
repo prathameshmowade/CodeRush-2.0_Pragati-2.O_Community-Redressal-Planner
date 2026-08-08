@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
+import { LanguageContext } from '../context/LanguageContext';
 import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import { MapPin, Navigation, CheckCircle2, Compass } from 'lucide-react';
 
@@ -14,6 +15,7 @@ const DEFAULT_CENTER = {
 };
 
 export default function LocationPicker({ onSelect }) {
+  const { t, isHindi } = useContext(LanguageContext);
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
   const { isLoaded } = useJsApiLoader({
@@ -62,45 +64,46 @@ export default function LocationPicker({ onSelect }) {
           setDetecting(false);
         },
         () => {
-          setCoords(DEFAULT_CENTER);
-          const addrStr = 'Laxmi Nagar Center, Nagpur';
-          setAddress(addrStr);
-          onSelect?.(addrStr);
           setDetecting(false);
+          const fallback = `GPS Default: 21.1458° N, 79.0882° E (Laxmi Nagar)`;
+          setAddress(fallback);
+          onSelect?.(fallback);
         }
       );
     } else {
-      setCoords(DEFAULT_CENTER);
-      onSelect?.('Laxmi Nagar Center, Nagpur');
       setDetecting(false);
+      const fallback = `GPS Default: 21.1458° N, 79.0882° E (Laxmi Nagar)`;
+      setAddress(fallback);
+      onSelect?.(fallback);
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-emerald-100 space-y-3 shadow-xs">
-      <div className="flex justify-between items-center pb-2 border-b border-emerald-100">
+    <div className="bg-white dark:bg-emerald-950/70 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-900 space-y-4 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div className="space-y-0.5">
-          <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+          <h3 className="font-bold text-emerald-950 dark:text-white text-sm flex items-center gap-1.5">
             <MapPin className="w-4 h-4 text-emerald-600" />
-            <span>Google Maps Location Pinpoint</span>
-          </span>
-          <p className="text-[11px] text-emerald-800">
-            Click anywhere on the map or drag the marker to pin exact grievance coordinates.
+            <span>{t('loc_title')}</span>
+          </h3>
+          <p className="text-[11px] text-emerald-800 dark:text-emerald-300">
+            {t('loc_sub')}
           </p>
         </div>
 
         <button
           type="button"
           onClick={handleDetectGPS}
-          className="btn-emerald text-xs py-1.5 px-3"
+          disabled={detecting}
+          className="btn-emerald text-xs py-1.5 px-3 flex items-center gap-1 shrink-0"
         >
           <Navigation className={`w-3.5 h-3.5 ${detecting ? 'animate-spin' : ''}`} />
-          <span>{detecting ? 'GPS Sync...' : 'Auto GPS'}</span>
+          <span>{detecting ? t('loc_detecting') : t('loc_auto_gps')}</span>
         </button>
       </div>
 
-      {/* Google Map View or Smart Preview Container */}
-      <div className="relative rounded-xl overflow-hidden border border-emerald-200 bg-emerald-50/30">
+      {/* Map Surface */}
+      <div className="rounded-xl overflow-hidden border border-emerald-200 dark:border-emerald-800 relative bg-emerald-50/50 dark:bg-emerald-900/30">
         {apiKey && isLoaded ? (
           <GoogleMap
             mapContainerStyle={MAP_CONTAINER_STYLE}
@@ -108,48 +111,44 @@ export default function LocationPicker({ onSelect }) {
             zoom={15}
             onClick={handleMapClick}
             options={{
-              disableDefaultUI: false,
+              disableDefaultUI: true,
               zoomControl: true,
-              streetViewControl: false,
-              mapTypeControl: false
+              styles: [
+                {
+                  featureType: 'all',
+                  elementType: 'geometry',
+                  stylers: [{ color: '#f0fdf4' }]
+                }
+              ]
             }}
           >
             <MarkerF
               position={coords}
               draggable={true}
               onDragEnd={handleMarkerDragEnd}
-              title="Grievance Location Pin"
             />
           </GoogleMap>
         ) : (
-          /* Interactive Fallback Map Embed when VITE_GOOGLE_MAPS_API_KEY is pending */
-          <div className="relative h-60 w-full overflow-hidden">
-            <iframe
-              title="Google Maps Location Pin"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              src={`https://maps.google.com/maps?q=${coords.lat},${coords.lng}&z=15&output=embed`}
-            />
-            <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-semibold text-emerald-800 border border-emerald-200 shadow-xs flex items-center gap-1">
-              <Compass className="w-3 h-3 text-emerald-600" />
-              <span>Interactive Google Map Layer</span>
-            </div>
+          <div className="h-[240px] flex flex-col items-center justify-center p-6 text-center space-y-2">
+            <Compass className="w-8 h-8 text-emerald-600 animate-spin" />
+            <span className="font-bold text-emerald-950 dark:text-white text-xs">
+              {isHindi ? 'नागपुर जोन 12 जीपीएस टेलीमेट्री ग्रिड' : 'Nagpur Zone 12 Spatial Telemetry Grid'}
+            </span>
+            <p className="text-[10px] text-emerald-800 dark:text-emerald-300 max-w-xs">
+              {isHindi ? 'सटीक भौगोलिक निर्देशांक: 21.1458° N, 79.0882° E (लक्ष्मी नगर, नागपुर)' : 'Simulated GPS Pinpoint: 21.1458° N, 79.0882° E (Laxmi Nagar Ward Center)'}
+            </p>
           </div>
         )}
       </div>
 
-      {/* Selected Coordinates & Address Badge */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1">
-        <div className="flex items-center gap-1.5 text-xs text-emerald-900">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span className="font-medium text-[11px] truncate max-w-xs">{address}</span>
-        </div>
-
-        <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 shrink-0">
-          📍 {coords.lat.toFixed(4)}° N, {coords.lng.toFixed(4)}° E
+      {/* Selected Address Display */}
+      <div className="bg-emerald-50/70 dark:bg-emerald-900/40 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 flex items-center justify-between text-xs">
+        <span className="text-emerald-800 dark:text-emerald-300 font-medium">
+          {t('loc_current')} <strong className="text-emerald-950 dark:text-white">{address}</strong>
+        </span>
+        <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-white dark:bg-emerald-950 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
+          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+          <span>{isHindi ? 'जीपीएस लॉक' : 'GPS Locked'}</span>
         </span>
       </div>
     </div>

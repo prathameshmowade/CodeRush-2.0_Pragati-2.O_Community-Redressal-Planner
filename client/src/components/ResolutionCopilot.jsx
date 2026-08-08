@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { LanguageContext } from '../context/LanguageContext';
 import { CheckCircle2, Wrench, Bot, ShieldCheck, Play } from 'lucide-react';
 
 export default function ResolutionCopilot() {
+  const { t, isHindi } = useContext(LanguageContext);
   const [agentStep, setAgentStep] = useState(0);
   const [agentRunning, setAgentRunning] = useState(false);
 
-  const AGENT_STEPS = [
+  const AGENT_STEPS_EN = [
     "Searching Municipal Contractor Directory (Nagpur Central)...",
     "Generating Automated Work Order #WO-2026-889...",
     "Sending Dispatch Notification to Apex Infra Ltd...",
@@ -14,6 +16,18 @@ export default function ResolutionCopilot() {
     "Polling CLIP Structural Photo Verification Proof...",
     "Work Order Complete! Recommending Final Officer Sign-Off."
   ];
+
+  const AGENT_STEPS_HI = [
+    "नगर निगम ठेकेदार निर्देशिका (नागपुर सेंट्रल) खोजी जा रही है...",
+    "स्वचालित वर्क ऑर्डर #WO-2026-889 जनरेट हो रहा है...",
+    "अपैक्स इंफ्रा लिमिटेड को प्रेषण सूचना भेजी गई...",
+    "फील्ड निरीक्षण समय (आज शाम 4:00 बजे) बुक किया गया...",
+    "ठेकेदार टेलीमेट्री व जीपीएस ट्रैकर से लाइव समन्वय...",
+    "क्लिप (CLIP) स्ट्रक्चरल फोटो सत्यापन प्रमाण प्राप्त हुआ...",
+    "वर्क ऑर्डर पूर्ण! अंतिम अधिकारी स्वीकृति की अनुशंसा।"
+  ];
+
+  const AGENT_STEPS = isHindi ? AGENT_STEPS_HI : AGENT_STEPS_EN;
 
   const runAgentLoop = () => {
     setAgentRunning(true);
@@ -31,88 +45,71 @@ export default function ResolutionCopilot() {
   };
 
   return (
-    <div className="bg-white p-6 md:p-8 rounded-2xl border border-emerald-100 space-y-6 shadow-xs">
+    <div className="bg-white dark:bg-emerald-950/70 p-6 md:p-8 rounded-2xl border border-emerald-100 dark:border-emerald-900 space-y-6 shadow-xs">
       {/* Title Header */}
-      <div className="flex justify-between items-center pb-3 border-b border-emerald-100">
+      <div className="flex justify-between items-center pb-3 border-b border-emerald-100 dark:border-emerald-900">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>AGENTIC DISPATCH COPILOT</span>
+            <span>{isHindi ? 'एआई प्रेषण कोपायलट' : 'AGENTIC DISPATCH COPILOT'}</span>
           </div>
-          <h3 className="text-lg font-extrabold text-emerald-950 flex items-center gap-2">
+          <h3 className="text-lg font-extrabold text-emerald-950 dark:text-white flex items-center gap-2">
             <Wrench className="w-5 h-5 text-emerald-600" />
-            <span>AI Resolution Copilot & Work Order Specs</span>
+            <span>{t('copilot_title')}</span>
           </h3>
         </div>
-        <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-semibold px-3 py-1 rounded-full">
+        <span className="bg-emerald-50 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[11px] font-semibold px-3 py-1 rounded-full">
           Autonomous Tier 1
         </span>
       </div>
 
       {/* Feature Grid: Repair Details */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-        <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 space-y-1">
-          <span className="text-emerald-700 block font-medium">Recommended Repair Method</span>
-          <span className="font-extrabold text-emerald-950 text-sm">Hot-Mix Asphalt Resurfacing</span>
+        <div className="bg-emerald-50/50 dark:bg-emerald-900/30 p-4 rounded-xl border border-emerald-100 dark:border-emerald-800 space-y-1">
+          <span className="text-emerald-700 dark:text-emerald-400 block font-medium">
+            {isHindi ? 'अनुशंसित मरम्मत विधि' : 'Recommended Repair Method'}
+          </span>
+          <span className="font-extrabold text-emerald-950 dark:text-white text-sm">
+            {isHindi ? 'हॉट-मिक्स डामर सड़क पुनर्सतहकरण' : 'Hot-Mix Asphalt Resurfacing'}
+          </span>
         </div>
-        <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 space-y-1">
-          <span className="text-emerald-700 block font-medium">Estimated Budget & SLA ETA</span>
-          <span className="font-extrabold text-emerald-800 text-sm">₹18,500 | 6 Hours</span>
-        </div>
-        <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 space-y-1">
-          <span className="text-emerald-700 block font-medium">Required Equipment & Crew</span>
-          <span className="font-extrabold text-emerald-950 text-sm">Asphalt Roller + 4 Crew</span>
-        </div>
-        <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 space-y-1">
-          <span className="text-emerald-700 block font-medium">Causal Root Cause Graph</span>
-          <span className="font-extrabold text-emerald-800 text-sm">23 Tickets → 1 Drainage Fix</span>
+        <div className="bg-emerald-50/50 dark:bg-emerald-900/30 p-4 rounded-xl border border-emerald-100 dark:border-emerald-800 space-y-1">
+          <span className="text-emerald-700 dark:text-emerald-400 block font-medium">
+            {isHindi ? 'अनुमानित बजट व समय' : 'Estimated Budget & SLA ETA'}
+          </span>
+          <span className="font-extrabold text-emerald-800 dark:text-emerald-300 text-sm">
+            ₹18,500 | {isHindi ? '6 घंटे' : '6 Hours'}
+          </span>
         </div>
       </div>
 
-      {/* Innovation 2: Computer Vision Verifier */}
-      <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 space-y-3">
-        <div className="flex justify-between items-center text-xs">
-          <span className="font-bold text-emerald-950 flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>Computer Vision Resolution Verifier (CLIP AI)</span>
-          </span>
-          <span className="text-emerald-800 font-bold text-[11px] bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
-            98% Structural Match Verified ✓
-          </span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-          <div className="bg-white p-3 rounded-lg border border-emerald-100 space-y-1">
-            <span className="text-red-700 font-bold block">Before (Complaint Photo)</span>
-            <p className="text-[11px] text-emerald-800">Pothole Depth: 14cm | Hazard Detected</p>
-          </div>
-          <div className="bg-white p-3 rounded-lg border border-emerald-100 space-y-1">
-            <span className="text-emerald-700 font-bold block">After (Repair Photo Proof)</span>
-            <p className="text-[11px] text-emerald-800">Surface Flatness: 99.2% | Verified ✓</p>
-          </div>
-        </div>
-      </div>
+      {/* Autonomous Dispatch Button */}
+      <div className="space-y-4 pt-2">
+        <button
+          type="button"
+          onClick={runAgentLoop}
+          disabled={agentRunning}
+          className="w-full btn-emerald text-xs py-3.5 justify-center shadow-md font-bold"
+        >
+          <Play className={`w-4 h-4 ${agentRunning ? 'animate-spin' : ''}`} />
+          <span>{agentRunning ? (isHindi ? 'एआई कोपायलट कार्य कर रहा है...' : 'Running Autonomous Dispatch...') : t('copilot_btn')}</span>
+        </button>
 
-      {/* Innovation 1: Agentic Resolution Loop Trigger */}
-      <div className="bg-emerald-50/80 p-4 rounded-xl border border-emerald-200 space-y-3">
-        <div className="flex justify-between items-center">
-          <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
-            <Bot className="w-4 h-4 text-emerald-600" />
-            <span>Agentic Dispatch Work Order Demo</span>
-          </span>
-          <button
-            type="button"
-            onClick={runAgentLoop}
-            disabled={agentRunning}
-            className="btn-emerald text-xs py-1.5 px-3"
-          >
-            <Play className="w-3.5 h-3.5" />
-            <span>{agentRunning ? 'Dispatching...' : 'Run 60s Agent Loop'}</span>
-          </button>
-        </div>
-
-        <div className="bg-white p-3 rounded-lg border border-emerald-200 text-xs font-mono text-emerald-950">
-          {AGENT_STEPS[agentStep]}
-        </div>
+        {/* Live Step Progression */}
+        {agentRunning && (
+          <div className="bg-emerald-50/80 dark:bg-emerald-900/40 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-2 text-xs animate-in fade-in">
+            <div className="flex items-center gap-2 font-bold text-emerald-950 dark:text-white">
+              <Bot className="w-4 h-4 text-emerald-600 animate-bounce" />
+              <span>{AGENT_STEPS[agentStep]}</span>
+            </div>
+            <div className="w-full bg-emerald-200 dark:bg-emerald-800 h-1.5 rounded-full overflow-hidden">
+              <div
+                className="bg-emerald-600 h-full transition-all duration-300 rounded-full"
+                style={{ width: `${((agentStep + 1) / AGENT_STEPS.length) * 100}%` }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

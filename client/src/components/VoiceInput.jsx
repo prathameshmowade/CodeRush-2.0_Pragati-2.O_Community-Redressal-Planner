@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { LanguageContext } from '../context/LanguageContext';
 import { Mic, Volume2, CheckCircle2 } from 'lucide-react';
 
 const PRESET_TRANSCRIPTS = [
@@ -8,17 +9,18 @@ const PRESET_TRANSCRIPTS = [
 ];
 
 export default function VoiceInput({ onTranscript }) {
+  const { t, isHindi } = useContext(LanguageContext);
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState('');
 
   const startListening = () => {
     if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-      alert('Speech recognition not supported in this browser. Try the simulation buttons below!');
+      alert(isHindi ? 'इस ब्राउज़र में स्पीच रिकग्निशन समर्थित नहीं है। नीचे दिए गए डेमो बटन आज़माएं!' : 'Speech recognition not supported in this browser. Try the simulation buttons below!');
       return;
     }
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
-    recognition.lang = 'en-IN';
+    recognition.lang = isHindi ? 'hi-IN' : 'en-IN';
     recognition.continuous = false;
     recognition.interimResults = true;
 
@@ -40,7 +42,7 @@ export default function VoiceInput({ onTranscript }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-emerald-100 space-y-4 shadow-xs">
+    <div className="bg-white dark:bg-emerald-950/70 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-900 space-y-4 shadow-xs">
       {/* Record Button */}
       <div className="flex items-center gap-4">
         <button
@@ -51,43 +53,48 @@ export default function VoiceInput({ onTranscript }) {
           }`}
         >
           <Mic className={`w-4 h-4 ${listening ? 'animate-bounce' : ''}`} />
-          <span>{listening ? 'Listening...' : 'Start Voice Recording'}</span>
+          <span>{listening ? (isHindi ? 'सुन रहे हैं... बोलिए' : 'Listening...') : t('voice_start')}</span>
         </button>
         {listening && (
           <span className="flex gap-2 items-center">
             <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
-            <span className="text-xs text-red-600 font-bold">Recording audio...</span>
+            <span className="text-xs text-red-600 dark:text-red-400 font-bold">
+              {isHindi ? 'आवाज़ रिकॉर्ड हो रही है...' : 'Recording audio...'}
+            </span>
           </span>
         )}
       </div>
 
       {/* Preset Simulation Buttons */}
-      <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-emerald-100">
-        <span className="text-xs text-emerald-800 font-semibold">Demo Voice Presets:</span>
-        {PRESET_TRANSCRIPTS.map((preset, idx) => (
-          <button
-            key={idx}
-            type="button"
-            onClick={() => handleSimulate(preset.text)}
-            className="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-xl transition font-medium border border-emerald-200 flex items-center gap-1"
-          >
-            <Volume2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>{preset.lang}: "{preset.text.substring(0, 24)}..."</span>
-          </button>
-        ))}
+      <div className="space-y-2 pt-2 border-t border-emerald-100 dark:border-emerald-900">
+        <span className="text-xs font-bold text-emerald-900 dark:text-emerald-200 block">
+          {t('voice_presets')}
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {PRESET_TRANSCRIPTS.map((preset, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => handleSimulate(preset.text)}
+              className="text-[11px] bg-emerald-50 dark:bg-emerald-900/50 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-medium px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800 transition flex items-center gap-1.5"
+            >
+              <Volume2 className="w-3 h-3 text-emerald-600" />
+              <span>{preset.lang}: "{preset.text.substring(0, 24)}..."</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Real-time Transcript Box */}
+      {/* Recognized Text Display */}
       {transcript && (
-        <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-200 text-xs font-mono space-y-1">
-          <div className="flex justify-between items-center text-emerald-900 font-bold font-sans">
-            <span className="flex items-center gap-1">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>Audio Transcript Output</span>
-            </span>
-            <span className="text-[10px] bg-emerald-100 px-2 py-0.5 rounded text-emerald-800">Auto-filled ✓</span>
-          </div>
-          <p className="text-emerald-950 font-sans leading-relaxed pt-1">{transcript}</p>
+        <div className="bg-emerald-50/70 dark:bg-emerald-900/40 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-1">
+          <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+            <span>{isHindi ? 'पहचाना गया वॉयस टेक्स्ट (स्वतः फॉर्म में भरा गया):' : 'Speech Transcript Captured (Auto-populated into form):'}</span>
+          </span>
+          <p className="text-xs text-emerald-950 dark:text-white font-medium leading-relaxed">
+            "{transcript}"
+          </p>
         </div>
       )}
     </div>
