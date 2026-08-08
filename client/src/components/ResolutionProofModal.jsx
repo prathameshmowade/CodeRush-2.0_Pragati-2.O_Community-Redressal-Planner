@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Camera, CheckCircle2, X, Building2, Upload, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Camera, CheckCircle2, X, Building2, Upload, AlertCircle, Sparkles } from 'lucide-react';
 
 const SAMPLE_PROOF_PRESETS = [
   {
