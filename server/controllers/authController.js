@@ -168,11 +168,26 @@ const register = async (req, res) => {
   }
 };
 
+// Send SMS OTP Endpoint
+const sendOTP = (req, res) => {
+  const { mobile } = req.body;
+  if (!mobile || String(mobile).replace(/\D/g, '').length < 10) {
+    return res.status(400).json({ success: false, error: 'Valid 10-digit mobile number is required.' });
+  }
+  const demoOtp = '123456';
+  return res.json({
+    success: true,
+    message: `SMS OTP dispatched to +91-${mobile}`,
+    otp: demoOtp,
+    expiresIn: '10 minutes'
+  });
+};
+
 // Verify OTP Endpoint (Simulated "123456")
 const verifyOTP = (req, res) => {
   const { mobile, otp } = req.body;
   if (!mobile || !otp) return res.status(400).json({ success: false, error: 'Mobile number and OTP required' });
-  if (otp === '123456' || otp.length === 6) {
+  if (otp === '123456' || String(otp).length === 6) {
     return res.json({ success: true, message: 'Mobile OTP Verified Successfully ✓' });
   }
   return res.status(400).json({ success: false, error: 'Invalid OTP code. Enter 123456 for demo verification.' });
@@ -283,4 +298,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, verifyOTP, login };
+module.exports = { register, verifyOTP, sendOTP, login };

@@ -14,7 +14,7 @@
     "description": "Huge water pressure leakage flooding main road",
     "category": "Water Supply",
     "urgency": "High Priority",
-    "status": "New",
+    "status": "Verified & Resolved",
     "department": "DEPT_ROAD",
     "confidenceScore": 94,
     "slaHoursTotal": 48,
@@ -36,7 +36,9 @@
         "CMP-2025-9102"
       ]
     },
-    "createdAt": "2026-08-08T00:25:18.248Z"
+    "createdAt": "2026-08-08T00:25:18.248Z",
+    "resolutionProof": "https://images.unsplash.com/photo-1542013936693-884638332954?w=600&auto=format&fit=crop&q=80",
+    "resolutionNotes": "Mainline joint replaced, pressure restored to 4.2 bar."
   },
   {
     "complaintId": "CMP-2026-005",

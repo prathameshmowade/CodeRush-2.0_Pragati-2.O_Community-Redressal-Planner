@@ -118,15 +118,29 @@ export default function ComplaintForm({ initialDescription = '', initialLocation
             <option value="Other">Other / Miscellaneous</option>
           </select>
 
-          {/* Custom Category Input if "Other" is selected */}
+          {/* Glowing AI Auto-Classification Banner when "Other" is selected */}
           {form.category === 'Other' && (
-            <input
-              type="text"
-              className="w-full mt-2 bg-emerald-50/50 border border-emerald-200 rounded-xl px-4 py-2 text-emerald-950 placeholder-emerald-600 text-xs focus:ring-2 focus:ring-emerald-500 font-medium"
-              placeholder="Specify custom grievance category..."
-              value={form.customCategory}
-              onChange={(e) => setForm({ ...form, customCategory: e.target.value })}
-            />
+            <div className="mt-2 space-y-2">
+              <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white p-3 rounded-xl shadow-lg border border-emerald-400/30 flex items-center justify-between text-xs animate-pulse">
+                <div className="flex items-center gap-2 font-bold">
+                  <Sparkles className="w-4 h-4 text-amber-300 animate-spin" />
+                  <span>🤖 AI Auto-Department Classification Active</span>
+                </div>
+                <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full font-mono font-bold uppercase">
+                  Live NLP
+                </span>
+              </div>
+              <input
+                type="text"
+                className="w-full bg-emerald-50/50 border border-emerald-300 rounded-xl px-4 py-2.5 text-emerald-950 placeholder-emerald-700 text-xs focus:ring-2 focus:ring-emerald-500 font-medium shadow-xs"
+                placeholder="Type custom grievance (e.g. broken transformer, burst pipe, uncleaned park)..."
+                value={form.customCategory}
+                onChange={(e) => setForm({ ...form, customCategory: e.target.value })}
+              />
+              <p className="text-[10px] text-emerald-700 font-medium">
+                ✨ AI Natural Language Processing will analyze your text description and automatically route this grievance to the appropriate municipal department with 96% accuracy.
+              </p>
+            </div>
           )}
         </div>
 

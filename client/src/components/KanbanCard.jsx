@@ -1,6 +1,28 @@
 import React, { useState } from 'react';
 import StatusBadge from './StatusBadge';
-import { ThumbsUp, MapPin, Sparkles, Camera, CheckCircle2, Play } from 'lucide-react';
+import { ThumbsUp, MapPin, Sparkles, Camera, CheckCircle2, Play, Building2, Bot } from 'lucide-react';
+
+const DEPT_BADGES = {
+  'Road Damage': { label: 'Roads & Infra', icon: '🏛️', color: 'bg-emerald-50 text-emerald-900 border-emerald-200' },
+  'DEPT_ROAD': { label: 'Roads & Infra', icon: '🏛️', color: 'bg-emerald-50 text-emerald-900 border-emerald-200' },
+  'Roads & Infrastructure Department': { label: 'Roads & Infra', icon: '🏛️', color: 'bg-emerald-50 text-emerald-900 border-emerald-200' },
+
+  'Water Supply': { label: 'Water & Drainage', icon: '💧', color: 'bg-blue-50 text-blue-900 border-blue-200' },
+  'DEPT_WATER': { label: 'Water & Drainage', icon: '💧', color: 'bg-blue-50 text-blue-900 border-blue-200' },
+  'Water Supply & Drainage Dept': { label: 'Water & Drainage', icon: '💧', color: 'bg-blue-50 text-blue-900 border-blue-200' },
+
+  'Sanitation': { label: 'Sanitation & Waste', icon: '🧹', color: 'bg-amber-50 text-amber-900 border-amber-200' },
+  'DEPT_SANITATION': { label: 'Sanitation & Waste', icon: '🧹', color: 'bg-amber-50 text-amber-900 border-amber-200' },
+  'Sanitation & Waste Management': { label: 'Sanitation & Waste', icon: '🧹', color: 'bg-amber-50 text-amber-900 border-amber-200' },
+
+  'Electrical': { label: 'Electrical & Lighting', icon: '⚡', color: 'bg-purple-50 text-purple-900 border-purple-200' },
+  'DEPT_ELECTRICAL': { label: 'Electrical & Lighting', icon: '⚡', color: 'bg-purple-50 text-purple-900 border-purple-200' },
+  'Electrical & Smart Lighting': { label: 'Electrical & Lighting', icon: '⚡', color: 'bg-purple-50 text-purple-900 border-purple-200' },
+
+  'Parks': { label: 'Parks & Amenities', icon: '🌳', color: 'bg-teal-50 text-teal-900 border-teal-200' },
+  'DEPT_PARKS': { label: 'Parks & Amenities', icon: '🌳', color: 'bg-teal-50 text-teal-900 border-teal-200' },
+  'Parks & Public Amenities': { label: 'Parks & Amenities', icon: '🌳', color: 'bg-teal-50 text-teal-900 border-teal-200' }
+};
 
 export default function KanbanCard({ complaint, onSelect, onStatusChange }) {
   const [upvotes, setUpvotes] = useState(complaint.upvotes || Math.floor(Math.random() * 20) + 5);
@@ -27,6 +49,16 @@ export default function KanbanCard({ complaint, onSelect, onStatusChange }) {
     onStatusChange?.(compId, 'Resolved');
   };
 
+  // Resolve Department Badge info
+  const deptKey = complaint.department || complaint.departmentCode || complaint.category;
+  const deptInfo = DEPT_BADGES[deptKey] || DEPT_BADGES[complaint.category] || {
+    label: complaint.department || complaint.category || 'Municipal Services',
+    icon: '🏛️',
+    color: 'bg-emerald-50 text-emerald-900 border-emerald-200'
+  };
+
+  const isAutoFromOther = complaint.isAutoClassified || (complaint.category && complaint.category.includes('Other')) || complaint.customCategory;
+
   return (
     <div
       onClick={() => onSelect?.(complaint)}
@@ -38,6 +70,21 @@ export default function KanbanCard({ complaint, onSelect, onStatusChange }) {
           {compId}
         </span>
         <StatusBadge status={complaint.status} />
+      </div>
+
+      {/* Department & AI Badges */}
+      <div className="flex flex-wrap gap-1.5 items-center">
+        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border flex items-center gap-1 ${deptInfo.color}`}>
+          <span>{deptInfo.icon}</span>
+          <span>{deptInfo.label}</span>
+        </span>
+
+        {isAutoFromOther && (
+          <span className="text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-md flex items-center gap-1 shadow-2xs">
+            <Bot className="w-3 h-3 text-amber-600" />
+            <span>🤖 AI Classified from Other</span>
+          </span>
+        )}
       </div>
 
       {/* Title */}

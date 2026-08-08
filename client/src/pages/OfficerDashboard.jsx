@@ -1,11 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import KanbanBoard from '../components/KanbanBoard';
 import SLATimer from '../components/SLATimer';
 import ResolutionCopilot from '../components/ResolutionCopilot';
 import XAIPanel from '../components/XAIPanel';
 import ResolutionProofModal from '../components/ResolutionProofModal';
-import { ShieldCheck, LayoutDashboard, Clock, AlertCircle } from 'lucide-react';
+import { ShieldCheck, LayoutDashboard, Clock, AlertCircle, Building2, Filter } from 'lucide-react';
+
+const DEPARTMENTS = [
+  { id: 'ALL', label: 'All Departments (Municipal Overview)', code: 'ALL', category: 'ALL' },
+  { id: 'DEPT_ROAD', label: 'Roads & Infrastructure', code: 'DEPT_ROAD', category: 'Road Damage' },
+  { id: 'DEPT_WATER', label: 'Water Supply & Drainage', code: 'DEPT_WATER', category: 'Water Supply' },
+  { id: 'DEPT_SANITATION', label: 'Sanitation & Waste Management', code: 'DEPT_SANITATION', category: 'Sanitation' },
+  { id: 'DEPT_ELECTRICAL', label: 'Electrical & Streetlights', code: 'DEPT_ELECTRICAL', category: 'Electrical' },
+  { id: 'DEPT_PARKS', label: 'Parks & Public Amenities', code: 'DEPT_PARKS', category: 'Parks' }
+];
 
 const FALLBACK_MOCK = [
   {
@@ -13,6 +23,8 @@ const FALLBACK_MOCK = [
     title: 'Severe road pothole near ABC School causing traffic hazards',
     description: 'Deep pothole on main school road. Multiple vehicles damaged over the weekend.',
     category: 'Road Damage',
+    department: 'Roads & Infrastructure Department',
+    departmentCode: 'DEPT_ROAD',
     urgency: 'High Priority',
     status: 'In Progress',
     confidenceScore: 96,
@@ -27,6 +39,8 @@ const FALLBACK_MOCK = [
     title: 'Major water pipe leakage on Dharampeth Main Road',
     description: 'Water gushing out of broken 12-inch mainline.',
     category: 'Water Supply',
+    department: 'Water Supply & Drainage Dept',
+    departmentCode: 'DEPT_WATER',
     urgency: 'Critical Priority',
     status: 'Assigned',
     confidenceScore: 94,
@@ -41,6 +55,8 @@ const FALLBACK_MOCK = [
     title: 'Uncollected garbage accumulation near public park',
     description: 'Waste dump not cleared for 4 days.',
     category: 'Sanitation',
+    department: 'Sanitation & Waste Management',
+    departmentCode: 'DEPT_SANITATION',
     urgency: 'Medium Priority',
     status: 'New',
     confidenceScore: 91,
@@ -53,6 +69,23 @@ const FALLBACK_MOCK = [
 ];
 
 export default function OfficerDashboard() {
+  const { user } = useContext(AuthContext);
+
+  // Auto-select department based on officer login context
+  const getInitialDept = () => {
+    if (user?.department) {
+      const d = user.department.toLowerCase();
+      if (d.includes('water')) return 'DEPT_WATER';
+      if (d.includes('sanitation') || d.includes('waste')) return 'DEPT_SANITATION';
+      if (d.includes('electric') || d.includes('light')) return 'DEPT_ELECTRICAL';
+      if (d.includes('park')) return 'DEPT_PARKS';
+      if (d.includes('road') || d.includes('infra')) return 'DEPT_ROAD';
+    }
+    return 'DEPT_ROAD';
+  };
+
+  const [selectedDept, setSelectedDept] = useState(getInitialDept);
+
   const [complaints, setComplaints] = useState(() => {
     const saved = localStorage.getItem('civic_officer_complaints');
     if (saved) {
@@ -230,11 +263,33 @@ export default function OfficerDashboard() {
     };
   }, []);
 
+  // Filter complaints according to Department Dropdown
+  const filteredComplaints = complaints.filter((c) => {
+    if (selectedDept === 'ALL') return true;
+    const targetDept = DEPARTMENTS.find((d) => d.id === selectedDept);
+    if (!targetDept) return true;
+
+    const dCode = c.departmentCode || '';
+    const dName = c.department || '';
+    const cat = c.category || '';
+
+    return (
+      dCode === targetDept.code ||
+      dName.toLowerCase().includes(targetDept.category.toLowerCase()) ||
+      cat.toLowerCase().includes(targetDept.category.toLowerCase()) ||
+      (selectedDept === 'DEPT_ROAD' && (cat.includes('Road') || dName.includes('Road'))) ||
+      (selectedDept === 'DEPT_WATER' && (cat.includes('Water') || dName.includes('Water') || cat.includes('Drain'))) ||
+      (selectedDept === 'DEPT_SANITATION' && (cat.includes('Sanitation') || cat.includes('Garbage') || dName.includes('Sanitation'))) ||
+      (selectedDept === 'DEPT_ELECTRICAL' && (cat.includes('Electrical') || cat.includes('Light') || dName.includes('Electrical'))) ||
+      (selectedDept === 'DEPT_PARKS' && (cat.includes('Park') || dName.includes('Park')))
+    );
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Officer Header Card */}
-      <div className="bg-white p-6 md:p-8 rounded-2xl border border-emerald-100 shadow-xs space-y-3">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="bg-white p-6 md:p-8 rounded-2xl border border-emerald-100 shadow-xs space-y-5">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
@@ -245,13 +300,36 @@ export default function OfficerDashboard() {
               <span>Officer Triage & Work Order Dashboard</span>
             </h1>
             <p className="text-emerald-800 text-xs md:text-sm">
-              Logged in as <strong className="text-emerald-950">Er. Rajesh Sharma</strong> (Superintending Engineer, Roads & Drainage)
+              Logged in as <strong className="text-emerald-950">{user?.name || 'Er. Rajesh Sharma'}</strong> ({user?.department || 'Superintending Engineer, Roads & Drainage'})
             </p>
           </div>
 
-          <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl text-xs">
-            <Clock className="w-4 h-4 text-emerald-600" />
-            <span className="font-bold text-emerald-900">{complaints.length} Total Grievances Active</span>
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Feature 1: Department Selection Dropdown */}
+            <div className="flex items-center gap-2 bg-emerald-50/80 border border-emerald-300 p-1.5 px-3 rounded-2xl shadow-xs">
+              <Building2 className="w-4 h-4 text-emerald-700 shrink-0" />
+              <div className="text-left">
+                <span className="block text-[9px] font-bold text-emerald-800 uppercase tracking-wider leading-none">
+                  Department Bifurcation:
+                </span>
+                <select
+                  value={selectedDept}
+                  onChange={(e) => setSelectedDept(e.target.value)}
+                  className="bg-transparent text-emerald-950 text-xs font-extrabold outline-none cursor-pointer pr-2 pt-0.5"
+                >
+                  {DEPARTMENTS.map((dept) => (
+                    <option key={dept.id} value={dept.id} className="text-emerald-950 bg-white">
+                      {dept.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-4 py-2.5 rounded-2xl text-xs shrink-0">
+              <Clock className="w-4 h-4 text-emerald-600" />
+              <span className="font-bold text-emerald-900">{filteredComplaints.length} Grievances in View</span>
+            </div>
           </div>
         </div>
       </div>
@@ -261,7 +339,7 @@ export default function OfficerDashboard() {
 
       {/* Main 5-Stage Kanban Board */}
       <KanbanBoard
-        complaints={complaints}
+        complaints={filteredComplaints}
         onSelect={(c) => setSelected(c)}
         onStatusChange={handleStatusChange}
       />
@@ -286,6 +364,7 @@ export default function OfficerDashboard() {
           complaint={resolvingComplaint}
           onClose={() => setResolvingComplaint(null)}
           onSubmit={handleResolutionSubmit}
+          onSubmitResolution={handleResolutionSubmit}
         />
       )}
     </div>
