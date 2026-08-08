@@ -43,7 +43,7 @@ Traditional municipal redressal systems suffer from severe friction:
 
 ### 🟢 The Proposed Solution
 **Awaaz AI** is a next-generation civic intelligence and redressal ecosystem:
-- **Zero-Friction Intake**: Report complaints in under 30 seconds using **Multi-Lingual Voice (English, Hindi, Marathi)**, interactive **WhatsApp Bot Simulator**, or web form with automatic GPS coordinate detection.
+- **Zero-Friction Intake**: Report complaints in under 30 seconds using **Multi-Lingual Voice (English, Hindi, Marathi)** or accessible web form with automatic GPS coordinate detection.
 - **Explainable AI (XAI) Triage**: Natural NLP computes urgency, classifies departments, extracts severity keywords, and generates transparent rationale badges.
 - **Smart Privacy & Anonymization**: Automated PII masking (Aadhaar & phone redaction) and YOLOv8 object anonymizer for uploaded photos.
 - **Field Officer Kanban & Resolution Copilot**: Live SLA countdown timers, dynamic contractor work order generator, and 3-citizen crowd consensus verification.
@@ -91,7 +91,7 @@ Traditional municipal redressal systems suffer from severe friction:
 | 3 | **🏙️ Predictive Digital Twin** | IoT telemetry grid simulating Ward 12 infrastructure health (Roads 62%, Water 91%, Lighting 88%). |
 | 4 | **🔒 Cryptographic SHA-256 Ledger** | Merkle tree audit logging preventing fraudulent ticket modifications or silent deletions. |
 | 5 | **🎙️ Multi-Lingual Speech AI** | Direct speech-to-text recognition in English, Hindi, and Marathi with 1-tap demo voice samples. |
-| 6 | **💬 WhatsApp Civic Assistant** | Zero-app WhatsApp complaint simulator for instant mobile citizen reporting. |
+| 6 | **🤖 YOLOv8 Computer Vision Anonymizer** | Automated edge computer vision blurring human faces and vehicle license plates to preserve citizen privacy. |
 
 ---
 
@@ -102,7 +102,7 @@ Traditional municipal redressal systems suffer from severe friction:
 | 🏛️ | **Prathamesh Mowade** | [@prathameshmowade](https://github.com/prathameshmowade) | **Team Lead & Full-Stack Architect** — Express Backend, Google Maps Integration, Routing Architecture |
 | 👩‍💻 | **Neha Musale** | [@NehaMusale11](https://github.com/NehaMusale11) | **UI/UX Lead** — React Component Hierarchy, ThemeToggle Switch System, Responsive Mobile Layouts |
 | 👨‍💻 | **Yash K** | [@Yash-k10](https://github.com/Yash-k10) | **AI/ML Lead** — NLP Triage Engine, SLA Timer Mathematics, Tracking Timeline & Status Flow |
-| 👩‍💻 | **Kanchan** | [@kanchan874](https://github.com/kanchan874) | **Backend Engineer** — Analytics Dashboard, ErrorBoundary Resilience, WhatsApp Civic Simulator |
+| 👩‍💻 | **Kanchan** | [@kanchan874](https://github.com/kanchan874) | **Backend Engineer** — Analytics Dashboard, ErrorBoundary Resilience, SLA Escalation Services |
 | 👩‍💻 | **Dhanshree** | [@Dhanshree010](https://github.com/Dhanshree010) | **Frontend Engineer** — Multi-Lingual Voice Recognition, City Digital Twin Map, Telemetry Widgets |
 
 ---
