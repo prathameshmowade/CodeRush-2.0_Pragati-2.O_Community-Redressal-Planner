@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
@@ -40,26 +41,28 @@ function CitizenRoute({ children }) {
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <div className="min-h-screen flex flex-col justify-between">
-          <div>
-            <Navbar />
-            <Routes>
-              <Route path="/login" element={<LoginGuard><LoginPage /></LoginGuard>} />
-              <Route path="/" element={<ProtectedRoute><LandingPage /></ProtectedRoute>} />
-              <Route path="/citizen" element={<CitizenRoute><CitizenPortal /></CitizenRoute>} />
-              <Route path="/officer" element={<OfficerRoute><OfficerDashboard /></OfficerRoute>} />
-              <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
-              <Route path="/digital-twin" element={<ProtectedRoute><DigitalTwinPage /></ProtectedRoute>} />
-              <Route path="/track" element={<ProtectedRoute><TrackComplaint /></ProtectedRoute>} />
-              <Route path="/complaint/:id" element={<ProtectedRoute><ComplaintPage /></ProtectedRoute>} />
-            </Routes>
+    <LanguageProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <div className="min-h-screen flex flex-col justify-between">
+            <div>
+              <Navbar />
+              <Routes>
+                <Route path="/login" element={<LoginGuard><LoginPage /></LoginGuard>} />
+                <Route path="/" element={<ProtectedRoute><LandingPage /></ProtectedRoute>} />
+                <Route path="/citizen" element={<CitizenRoute><CitizenPortal /></CitizenRoute>} />
+                <Route path="/officer" element={<OfficerRoute><OfficerDashboard /></OfficerRoute>} />
+                <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
+                <Route path="/digital-twin" element={<ProtectedRoute><DigitalTwinPage /></ProtectedRoute>} />
+                <Route path="/track" element={<ProtectedRoute><TrackComplaint /></ProtectedRoute>} />
+                <Route path="/complaint/:id" element={<ProtectedRoute><ComplaintPage /></ProtectedRoute>} />
+              </Routes>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </BrowserRouter>
-    </AuthProvider>
+        </BrowserRouter>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
 

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
+import { LanguageContext } from '../context/LanguageContext';
 import ComplaintForm from '../components/ComplaintForm';
 import VoiceInput from '../components/VoiceInput';
 import ImageUpload from '../components/ImageUpload';
@@ -13,6 +14,7 @@ import {
 } from 'lucide-react';
 
 export default function CitizenPortal() {
+  const { t } = useContext(LanguageContext);
   const [submitted, setSubmitted] = useState(null);
   const [voiceText, setVoiceText] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('Laxmi Nagar, Nagpur');
@@ -84,51 +86,51 @@ export default function CitizenPortal() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Page Header */}
-      <div className="bg-white p-6 md:p-8 rounded-2xl border border-emerald-100 shadow-xs space-y-3">
-        <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider">
+      <div className="bg-white dark:bg-emerald-950/70 p-6 md:p-8 rounded-2xl border border-emerald-100 dark:border-emerald-900 shadow-xs space-y-3">
+        <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
           <ShieldCheck className="w-4 h-4 text-emerald-600" />
           <span>RESIDENT INTAKE PORTAL</span>
           <span className="text-emerald-300">•</span>
           <span>PRIVACY SHIELD PROTECTED</span>
         </div>
-        <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-950 flex items-center gap-2.5">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-950 dark:text-white flex items-center gap-2.5">
           <FileEdit className="w-7 h-7 text-emerald-600" />
-          <span>Submit a Civic Grievance</span>
+          <span>{t('citizen_title')}</span>
         </h1>
-        <p className="text-emerald-800 text-xs md:text-sm max-w-2xl leading-relaxed">
-          Report road damage, water leakages, sanitation, streetlights, or safety hazards using voice speech or text in your preferred language.
+        <p className="text-emerald-800 dark:text-emerald-300 text-xs md:text-sm max-w-2xl leading-relaxed">
+          {t('citizen_desc')}
         </p>
       </div>
 
       <PrivacyShield />
 
       {submitted ? (
-        <div className="bg-white p-8 md:p-12 rounded-2xl border border-emerald-200 text-center space-y-6 shadow-xs">
-          <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+        <div className="bg-white dark:bg-emerald-950/70 p-8 md:p-12 rounded-2xl border border-emerald-200 dark:border-emerald-800 text-center space-y-6 shadow-xs">
+          <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-10 h-10" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-extrabold text-emerald-950">Grievance Registered Successfully</h2>
-            <p className="text-emerald-800 text-xs md:text-sm">
+            <h2 className="text-2xl font-extrabold text-emerald-950 dark:text-white">Grievance Registered Successfully</h2>
+            <p className="text-emerald-800 dark:text-emerald-300 text-xs md:text-sm">
               Your Reference Tracking ID:{' '}
-              <span className="font-mono font-bold text-emerald-800 px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-200 text-base ml-1">
+              <span className="font-mono font-bold text-emerald-800 dark:text-emerald-200 px-3 py-1 bg-emerald-50 dark:bg-emerald-900 rounded-lg border border-emerald-200 dark:border-emerald-800 text-base ml-1">
                 {submitted.complaintId}
               </span>
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left max-w-xl mx-auto pt-4 text-xs">
-            <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-100">
-              <span className="text-emerald-700 text-[11px] block">Title</span>
-              <span className="font-bold text-emerald-950 truncate block">{submitted.title}</span>
+            <div className="bg-emerald-50 dark:bg-emerald-900/50 p-3.5 rounded-xl border border-emerald-100 dark:border-emerald-800">
+              <span className="text-emerald-700 dark:text-emerald-400 text-[11px] block">Title</span>
+              <span className="font-bold text-emerald-950 dark:text-white truncate block">{submitted.title}</span>
             </div>
-            <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-100">
-              <span className="text-emerald-700 text-[11px] block">Category</span>
-              <span className="font-bold text-emerald-950">{submitted.category}</span>
+            <div className="bg-emerald-50 dark:bg-emerald-900/50 p-3.5 rounded-xl border border-emerald-100 dark:border-emerald-800">
+              <span className="text-emerald-700 dark:text-emerald-400 text-[11px] block">Category</span>
+              <span className="font-bold text-emerald-950 dark:text-white">{submitted.category}</span>
             </div>
-            <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-100">
-              <span className="text-emerald-700 text-[11px] block">Reported Location</span>
-              <span className="font-bold text-emerald-950 truncate block">{submitted.location || 'Laxmi Nagar, Nagpur'}</span>
+            <div className="bg-emerald-50 dark:bg-emerald-900/50 p-3.5 rounded-xl border border-emerald-100 dark:border-emerald-800">
+              <span className="text-emerald-700 dark:text-emerald-400 text-[11px] block">Reported Location</span>
+              <span className="font-bold text-emerald-950 dark:text-white truncate block">{submitted.location || 'Laxmi Nagar, Nagpur'}</span>
             </div>
           </div>
 
@@ -143,12 +145,12 @@ export default function CitizenPortal() {
       ) : (
         <div className="space-y-8">
           {/* Section 1: Voice Input Speech-to-Text */}
-          <div className="bg-white p-6 md:p-8 rounded-2xl border border-emerald-100 space-y-4 shadow-xs">
+          <div className="bg-white dark:bg-emerald-950/70 p-6 md:p-8 rounded-2xl border border-emerald-100 dark:border-emerald-900 space-y-4 shadow-xs">
             <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 font-bold text-xs flex items-center justify-center border border-emerald-200">
+              <span className="w-6 h-6 rounded-full bg-emerald-50 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-300 font-bold text-xs flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
                 1
               </span>
-              <h2 className="text-lg font-bold text-emerald-950">Voice Speech-to-Text (EN / HI / MR)</h2>
+              <h2 className="text-lg font-bold text-emerald-950 dark:text-white">{t('citizen_voice_step')}</h2>
             </div>
             <VoiceInput onTranscript={(text) => setVoiceText(text)} />
           </div>
@@ -160,12 +162,12 @@ export default function CitizenPortal() {
           </div>
 
           {/* Section 3: Grievance Form Details & Submit */}
-          <div className="bg-white p-6 md:p-8 rounded-2xl border border-emerald-100 space-y-4 shadow-xs">
+          <div className="bg-white dark:bg-emerald-950/70 p-6 md:p-8 rounded-2xl border border-emerald-100 dark:border-emerald-900 space-y-4 shadow-xs">
             <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 font-bold text-xs flex items-center justify-center border border-emerald-200">
+              <span className="w-6 h-6 rounded-full bg-emerald-50 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-300 font-bold text-xs flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
                 3
               </span>
-              <h2 className="text-lg font-bold text-emerald-950">Grievance Submission Form</h2>
+              <h2 className="text-lg font-bold text-emerald-950 dark:text-white">{t('citizen_form_step')}</h2>
             </div>
             <ComplaintForm
               initialDescription={voiceText}
