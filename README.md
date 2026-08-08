@@ -5,6 +5,19 @@
 
 ---
 
+## 🌐 Live Production Deployment
+
+| Service | Live URL |
+| :--- | :--- |
+| **🚀 Production Web App** | [https://code-rush-2-0-pragati-2-o-community.vercel.app/](https://code-rush-2-0-pragati-2-o-community.vercel.app/) |
+| **👮 Officer Kanban Dashboard** | [https://code-rush-2-0-pragati-2-o-community.vercel.app/officer](https://code-rush-2-0-pragati-2-o-community.vercel.app/officer) |
+| **👤 Citizen Intake & Voice AI** | [https://code-rush-2-0-pragati-2-o-community.vercel.app/citizen](https://code-rush-2-0-pragati-2-o-community.vercel.app/citizen) |
+| **🗺️ City Digital Twin & Heatmap** | [https://code-rush-2-0-pragati-2-o-community.vercel.app/digital-twin](https://code-rush-2-0-pragati-2-o-community.vercel.app/digital-twin) |
+| **📊 City Resolution Analytics** | [https://code-rush-2-0-pragati-2-o-community.vercel.app/analytics](https://code-rush-2-0-pragati-2-o-community.vercel.app/analytics) |
+| **🔑 Government Login Portal** | [https://code-rush-2-0-pragati-2-o-community.vercel.app/login](https://code-rush-2-0-pragati-2-o-community.vercel.app/login) |
+
+---
+
 ## 📋 Project Information
 
 | Field | Details |
@@ -13,6 +26,7 @@
 | **Project Title** | **Awaaz AI — Smart Community Redressal Management & Predictive Civic Planner** |
 | **Track / Theme** | **Track 3: Sustainable Development Goals (SDG-01: No Poverty & Sustainable Cities & Communities)** |
 | **Repository** | [https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner](https://github.com/prathameshmowade/CodeRush-2.0_Pragati-2.O_Community-Redressal-Planner) |
+| **Live Vercel URL** | [https://code-rush-2-0-pragati-2-o-community.vercel.app/](https://code-rush-2-0-pragati-2-o-community.vercel.app/) |
 | **Live Local URL** | `http://localhost:3000` |
 
 ---
@@ -144,15 +158,15 @@ npm run dev
 
 ## 🌐 Live Platform Navigation Guide
 
-| Page Route | Description | Quick Link |
-| :--- | :--- | :--- |
-| **`/`** | Overview Landing Page, KPIs, Ward 5 Telemetry, and Features | [http://localhost:3000/](http://localhost:3000/) |
-| **`/login`** | Government SSO Portal with ThemeToggle & 1-Click Demo Logins | [http://localhost:3000/login](http://localhost:3000/login) |
-| **`/citizen`** | Multi-lingual Speech & Photo Intake with GPS Geolocation | [http://localhost:3000/citizen](http://localhost:3000/citizen) |
-| **`/officer`** | Kanban Operations Board, SLA Timers, and Resolution Copilot | [http://localhost:3000/officer](http://localhost:3000/officer) |
-| **`/digital-twin`** | Predictive Ward Infrastructure Simulation & Heatmap | [http://localhost:3000/digital-twin](http://localhost:3000/digital-twin) |
-| **`/analytics`** | City-wide Resolution Metrics, Department Speed, and Audit Log | [http://localhost:3000/analytics](http://localhost:3000/analytics) |
-| **`/complaint/:id`** | Public Complaint Tracking Timeline & Cryptographic Proof | [http://localhost:3000/complaint/CMP-2026-001](http://localhost:3000/complaint/CMP-2026-001) |
+| Page Route | Description | Live Vercel Link | Local Link |
+| :--- | :--- | :--- | :--- |
+| **`/`** | Overview Landing Page, KPIs, Ward 5 Telemetry, and Features | [https://code-rush-2-0-pragati-2-o-community.vercel.app/](https://code-rush-2-0-pragati-2-o-community.vercel.app/) | `http://localhost:3000/` |
+| **`/officer`** | Kanban Operations Board, SLA Timers, and Resolution Copilot | [https://code-rush-2-0-pragati-2-o-community.vercel.app/officer](https://code-rush-2-0-pragati-2-o-community.vercel.app/officer) | `http://localhost:3000/officer` |
+| **`/citizen`** | Multi-lingual Speech & Photo Intake with GPS Geolocation | [https://code-rush-2-0-pragati-2-o-community.vercel.app/citizen](https://code-rush-2-0-pragati-2-o-community.vercel.app/citizen) | `http://localhost:3000/citizen` |
+| **`/login`** | Government SSO Portal with ThemeToggle & 1-Click Demo Logins | [https://code-rush-2-0-pragati-2-o-community.vercel.app/login](https://code-rush-2-0-pragati-2-o-community.vercel.app/login) | `http://localhost:3000/login` |
+| **`/digital-twin`** | Predictive Ward Infrastructure Simulation & Heatmap | [https://code-rush-2-0-pragati-2-o-community.vercel.app/digital-twin](https://code-rush-2-0-pragati-2-o-community.vercel.app/digital-twin) | `http://localhost:3000/digital-twin` |
+| **`/analytics`** | City-wide Resolution Metrics, Department Speed, and Audit Log | [https://code-rush-2-0-pragati-2-o-community.vercel.app/analytics](https://code-rush-2-0-pragati-2-o-community.vercel.app/analytics) | `http://localhost:3000/analytics` |
+| **`/complaint/:id`** | Public Complaint Tracking Timeline & Cryptographic Proof | [https://code-rush-2-0-pragati-2-o-community.vercel.app/complaint/CMP-2026-001](https://code-rush-2-0-pragati-2-o-community.vercel.app/complaint/CMP-2026-001) | `http://localhost:3000/complaint/CMP-2026-001` |
 
 ---
 
