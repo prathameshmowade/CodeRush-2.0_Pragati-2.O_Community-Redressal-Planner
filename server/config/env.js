@@ -4,5 +4,11 @@ module.exports = {
   MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/civicflow_db',
   JWT_SECRET: process.env.JWT_SECRET || 'secret',
   AI_SERVICE_URL: process.env.AI_SERVICE_URL || 'http://localhost:8000',
-  ADMIN_SECRET_KEY: process.env.ADMIN_SECRET_KEY || ''
+  ADMIN_SECRET_KEY: process.env.ADMIN_SECRET_KEY || '',
+  TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID || '',
+  TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN || '',
+  TWILIO_API_KEY: process.env.TWILIO_API_KEY || '',
+  TWILIO_API_SECRET: process.env.TWILIO_API_SECRET || '',
+  TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER || '',
+  TWILIO_WEBHOOK_BASE_URL: process.env.TWILIO_WEBHOOK_BASE_URL || ''
 };

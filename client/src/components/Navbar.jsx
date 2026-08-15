@@ -15,7 +15,9 @@ import {
   LogOut,
   User,
   Menu,
-  X
+  X,
+  MessageSquare,
+  Phone
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -107,6 +109,30 @@ export default function Navbar() {
           >
             <BarChart3 className="w-4 h-4 text-emerald-600" />
             <span>{t('nav_analytics')}</span>
+          </Link>
+
+          <Link
+            to="/sms-complaint"
+            className={`px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 ${
+              isActive('/sms-complaint')
+                ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:border-emerald-700'
+                : 'text-emerald-900 hover:text-emerald-700 hover:bg-emerald-50/50 dark:text-emerald-200 dark:hover:bg-emerald-900/30'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 text-emerald-600" />
+            <span>{t('nav_sms_complaint')}</span>
+          </Link>
+
+          <Link
+            to="/call-complaint"
+            className={`px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 ${
+              isActive('/call-complaint')
+                ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:border-emerald-700'
+                : 'text-emerald-900 hover:text-emerald-700 hover:bg-emerald-50/50 dark:text-emerald-200 dark:hover:bg-emerald-900/30'
+            }`}
+          >
+            <Phone className="w-4 h-4 text-emerald-600" />
+            <span>{t('nav_call_complaint')}</span>
           </Link>
 
           {/* Right Controls Group (Language Toggle + Theme Toggle + Auth) */}
@@ -201,10 +227,26 @@ export default function Navbar() {
           <Link
             to="/analytics"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 text-emerald-900 dark:text-emerald-100 hover:text-emerald-600 py-2"
+            className="flex items-center gap-2 text-emerald-900 dark:text-emerald-100 hover:text-emerald-600 py-2 border-b border-emerald-50 dark:border-emerald-900"
           >
             <BarChart3 className="w-4 h-4 text-emerald-600" />
             <span>{t('nav_analytics')}</span>
+          </Link>
+          <Link
+            to="/sms-complaint"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2 text-emerald-900 dark:text-emerald-100 hover:text-emerald-600 py-2 border-b border-emerald-50 dark:border-emerald-900"
+          >
+            <MessageSquare className="w-4 h-4 text-emerald-600" />
+            <span>{t('nav_sms_complaint')}</span>
+          </Link>
+          <Link
+            to="/call-complaint"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2 text-emerald-900 dark:text-emerald-100 hover:text-emerald-600 py-2"
+          >
+            <Phone className="w-4 h-4 text-emerald-600" />
+            <span>{t('nav_call_complaint')}</span>
           </Link>
         </div>
       )}

@@ -12,6 +12,8 @@ import DigitalTwinPage from './pages/DigitalTwinPage';
 import LoginPage from './pages/LoginPage';
 import TrackComplaint from './pages/TrackComplaint';
 import ComplaintPage from './pages/ComplaintPage';
+import SmsComplaintPage from './pages/SmsComplaintPage';
+import CallComplaintPage from './pages/CallComplaintPage';
 
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
@@ -21,7 +23,9 @@ function ProtectedRoute({ children }) {
 
 function LoginGuard({ children }) {
   const { user } = useContext(AuthContext);
-  if (user) return <Navigate to="/" replace />;
+  if (user) {
+    return <Navigate to={user.role === 'officer' || user.role === 'admin' ? '/officer' : '/citizen'} replace />;
+  }
   return children;
 }
 
@@ -56,6 +60,8 @@ function App() {
                 <Route path="/digital-twin" element={<ProtectedRoute><DigitalTwinPage /></ProtectedRoute>} />
                 <Route path="/track" element={<ProtectedRoute><TrackComplaint /></ProtectedRoute>} />
                 <Route path="/complaint/:id" element={<ProtectedRoute><ComplaintPage /></ProtectedRoute>} />
+                <Route path="/sms-complaint" element={<ProtectedRoute><SmsComplaintPage /></ProtectedRoute>} />
+                <Route path="/call-complaint" element={<ProtectedRoute><CallComplaintPage /></ProtectedRoute>} />
               </Routes>
             </div>
             <Footer />

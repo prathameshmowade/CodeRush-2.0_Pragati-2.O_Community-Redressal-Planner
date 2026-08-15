@@ -23,6 +23,8 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/officers', require('./routes/officers'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/audit', require('./routes/audit'));
+app.use('/api/sms', require('./routes/sms'));
+app.use('/api/call', require('./routes/call'));
 
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {

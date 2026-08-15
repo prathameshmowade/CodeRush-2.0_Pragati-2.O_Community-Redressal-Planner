@@ -1,10 +1,12 @@
 import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { ShieldCheck, UserCheck, PhoneCall, ArrowRight, User, Lock, Mail, MapPin, CheckCircle2, Smartphone, KeyRound } from 'lucide-react';
 
 export default function LoginPage() {
   const { user, login, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
   const [roleMode, setRoleMode] = useState('citizen'); // 'citizen' | 'officer'
 
@@ -29,6 +31,8 @@ export default function LoginPage() {
 
   const handleQuickDemoUser = (demoUser) => {
     login(demoUser);
+    const target = demoUser.role === 'officer' || demoUser.role === 'admin' ? '/officer' : '/citizen';
+    navigate(target, { replace: true });
   };
 
   const handleLogin = (e) => {
@@ -36,12 +40,14 @@ export default function LoginPage() {
     if (!form.identifier) return alert('Please enter Email or Mobile Number');
 
     const isOfficer = roleMode === 'officer' || form.identifier.includes('officer');
-    login({
+    const userObj = {
       name: isOfficer ? 'Er. Rajesh Sharma' : 'Pragati Citizen',
       email: form.identifier,
       role: isOfficer ? 'officer' : 'citizen',
       department: isOfficer ? 'Roads & Infrastructure Department' : undefined
-    });
+    };
+    login(userObj);
+    navigate(isOfficer ? '/officer' : '/citizen', { replace: true });
   };
 
   // Feature 2: Send OTP Handler
@@ -113,14 +119,16 @@ export default function LoginPage() {
       }
     }
 
-    login({
+    const userObj = {
       name: form.name,
       email: form.identifier || (regRole === 'officer' ? 'officer@nagpur.gov.in' : 'citizen@nagpur.gov.in'),
       mobile: form.mobile,
       role: regRole,
       department: regRole === 'officer' ? 'Roads & Infrastructure Department' : undefined,
       address: form.address || 'Laxmi Nagar, Nagpur'
-    });
+    };
+    login(userObj);
+    navigate(regRole === 'officer' ? '/officer' : '/citizen', { replace: true });
   };
 
   return (
@@ -163,13 +171,13 @@ export default function LoginPage() {
             </div>
 
             <div className="pt-4 border-t border-emerald-100 flex gap-3">
-              <a
-                href={user.role === 'officer' ? '/officer' : '/citizen'}
+              <Link
+                to={user.role === 'officer' || user.role === 'admin' ? '/officer' : '/citizen'}
                 className="flex-1 btn-emerald text-xs py-2.5 justify-center"
               >
-                <span>Go to {user.role === 'officer' ? 'Officer Dashboard' : 'Citizen Portal'}</span>
+                <span>Go to {user.role === 'officer' || user.role === 'admin' ? 'Officer Dashboard' : 'Citizen Portal'}</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
               <button
                 onClick={logout}
                 className="px-4 py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold transition"

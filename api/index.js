@@ -227,4 +227,159 @@ app.post('/api/auth/register', (req, res) => {
   });
 });
 
+// ===== SMS Complaint Endpoints =====
+
+app.post('/api/sms/incoming', (req, res) => {
+  const smsBody = req.body.Body || req.body.body || '';
+  const fromNumber = req.body.From || req.body.from || '+919876543210';
+  const compId = `CMP-2026-${Math.floor(100 + Math.random() * 900)}`;
+  const classified = classifyText({ title: smsBody, description: smsBody });
+
+  const newComplaint = {
+    complaintId: compId,
+    _id: compId,
+    title: smsBody.substring(0, 60) + (smsBody.length > 60 ? '...' : ''),
+    description: smsBody,
+    category: classified.category,
+    department: classified.department,
+    urgency: classified.urgency,
+    status: 'New',
+    source: 'sms',
+    citizenPhone: fromNumber,
+    confidenceScore: classified.confidenceScore,
+    isAutoClassified: true,
+    slaHoursTotal: 48,
+    slaHoursRemaining: 48,
+    createdAt: new Date().toISOString()
+  };
+  sampleComplaints.unshift(newComplaint);
+
+  const replyMsg = `✅ Awaaz AI: Complaint registered! ID: ${compId} | ${classified.category} | SLA: 48hrs`;
+  res.set('Content-Type', 'text/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?><Response><Message>${replyMsg}</Message></Response>`);
+});
+
+app.post('/api/sms/simulate', (req, res) => {
+  const { message, phoneNumber } = req.body;
+  if (!message || !message.trim()) {
+    return res.status(400).json({ success: false, error: 'Please provide a complaint message.' });
+  }
+  const compId = `CMP-2026-${Math.floor(100 + Math.random() * 900)}`;
+  const classified = classifyText({ title: message, description: message });
+
+  const newComplaint = {
+    complaintId: compId,
+    _id: compId,
+    title: message.substring(0, 60) + (message.length > 60 ? '...' : ''),
+    description: message,
+    category: classified.category,
+    department: classified.department,
+    departmentCode: classified.departmentCode,
+    urgency: classified.urgency,
+    status: 'New',
+    source: 'sms',
+    citizenPhone: phoneNumber || '+919876543210',
+    confidenceScore: classified.confidenceScore,
+    isAutoClassified: true,
+    slaHoursTotal: 48,
+    slaHoursRemaining: 48,
+    impactScore: Math.floor(Math.random() * 10) + 85,
+    xaiData: {
+      confidence: classified.confidenceScore,
+      reasoning: classified.xaiReasoning,
+      rulesApplied: ['SMS Simulation Protocol'],
+      similarCases: ['CMP-2025-8891']
+    },
+    createdAt: new Date().toISOString()
+  };
+  sampleComplaints.unshift(newComplaint);
+
+  res.status(201).json({
+    success: true,
+    message: `Complaint registered via SMS! Tracking ID: ${compId}`,
+    data: newComplaint,
+    confirmation: `✅ Awaaz AI: Your complaint "${message.substring(0, 40)}..." has been registered as ${compId}. Category: ${classified.category}. SLA: 48 hours.`
+  });
+});
+
+app.get('/api/sms/complaints', (req, res) => {
+  const smsComplaints = sampleComplaints.filter(c => c.source === 'sms');
+  res.json({ success: true, count: smsComplaints.length, data: smsComplaints });
+});
+
+// ===== Call Complaint Endpoints =====
+
+app.post('/api/call/incoming', (req, res) => {
+  const baseUrl = process.env.TWILIO_WEBHOOK_BASE_URL || `${req.protocol}://${req.get('host')}`;
+  res.set('Content-Type', 'text/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say language="en-IN" voice="Polly.Aditi">Welcome to Awaaz AI Municipal Grievance Helpline. Please describe your complaint after the beep.</Say>
+  <Record maxLength="120" transcribe="true" transcribeCallback="${baseUrl}/api/call/transcription" action="${baseUrl}/api/call/recording" playBeep="true" timeout="5" />
+  <Say>We did not receive a recording. Please call again.</Say>
+</Response>`);
+});
+
+app.post('/api/call/recording', (req, res) => {
+  const compId = `CMP-2026-${Math.floor(100 + Math.random() * 900)}`;
+  res.set('Content-Type', 'text/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say language="en-IN" voice="Polly.Aditi">Thank you. Your complaint has been recorded. Your tracking ID is ${compId.split('').join(' ')}. You will receive an SMS confirmation shortly.</Say>
+</Response>`);
+});
+
+app.post('/api/call/transcription', (req, res) => {
+  res.json({ success: true, message: 'Transcription processed' });
+});
+
+app.post('/api/call/simulate', (req, res) => {
+  const { transcription, phoneNumber } = req.body;
+  if (!transcription || !transcription.trim()) {
+    return res.status(400).json({ success: false, error: 'Please provide a complaint transcription.' });
+  }
+  const compId = `CMP-2026-${Math.floor(100 + Math.random() * 900)}`;
+  const classified = classifyText({ title: transcription, description: transcription });
+
+  const newComplaint = {
+    complaintId: compId,
+    _id: compId,
+    title: transcription.substring(0, 60) + (transcription.length > 60 ? '...' : ''),
+    description: transcription,
+    category: classified.category,
+    department: classified.department,
+    departmentCode: classified.departmentCode,
+    urgency: classified.urgency,
+    status: 'New',
+    source: 'call',
+    citizenPhone: phoneNumber || '+919876543210',
+    confidenceScore: classified.confidenceScore,
+    isAutoClassified: true,
+    slaHoursTotal: 48,
+    slaHoursRemaining: 48,
+    impactScore: Math.floor(Math.random() * 10) + 85,
+    xaiData: {
+      confidence: classified.confidenceScore,
+      reasoning: classified.xaiReasoning,
+      rulesApplied: ['Call Simulation Protocol'],
+      similarCases: ['CMP-2025-8891']
+    },
+    createdAt: new Date().toISOString()
+  };
+  sampleComplaints.unshift(newComplaint);
+
+  res.status(201).json({
+    success: true,
+    message: `Complaint registered via call! Tracking ID: ${compId}`,
+    data: newComplaint,
+    confirmation: `✅ Awaaz AI: Your voice complaint has been registered as ${compId}. Category: ${classified.category}. SLA: 48 hours.`
+  });
+});
+
+app.get('/api/call/complaints', (req, res) => {
+  const callComplaints = sampleComplaints.filter(c => c.source === 'call');
+  res.json({ success: true, count: callComplaints.length, data: callComplaints });
+});
+
 module.exports = app;
+

@@ -164,7 +164,15 @@ const TRANSLATIONS = {
     footer_desc: 'A next-generation municipal redressal and predictive infrastructure governance platform developed for Pragati 2.0 Hackathon.',
     footer_nav: 'Useful Navigation',
     footer_transparency: 'System Transparency',
-    footer_rights: 'All municipal rights reserved. Compliant with Digital Personal Data Protection (DPDP) Act 2023.'
+    footer_rights: 'All municipal rights reserved. Compliant with Digital Personal Data Protection (DPDP) Act 2023.',
+
+    // SMS & Call Complaint
+    nav_sms_complaint: 'SMS Complaint',
+    nav_call_complaint: 'Call Complaint',
+    sms_page_title: 'File Complaint via Text SMS',
+    sms_page_desc: 'No app, no internet needed — simply send a text message to register your municipal complaint.',
+    call_page_title: 'File Complaint via Phone Call',
+    call_page_desc: 'Just make a phone call and speak your complaint. The IVR system records your voice and creates a ticket.'
   },
   hi: {
     // Brand & Header
@@ -327,7 +335,15 @@ const TRANSLATIONS = {
     footer_desc: 'प्रगति 2.0 हैकाथॉन के लिए विकसित अगली पीढ़ी का नगर पालिका शिकायत निवारण और पूर्वानुमानित बुनियादी ढांचा प्रशासन मंच।',
     footer_nav: 'उपयोगी नेविगेशन',
     footer_transparency: 'प्रणाली पारदर्शिता',
-    footer_rights: 'सर्वाधिकार सुरक्षित। डिजिटल पर्सनल डेटा प्रोटेक्शन (DPDP) अधिनियम 2023 के तहत 100% सुरक्षित।'
+    footer_rights: 'सर्वाधिकार सुरक्षित। डिजिटल पर्सनल डेटा प्रोटेक्शन (DPDP) अधिनियम 2023 के तहत 100% सुरक्षित।',
+
+    // SMS & Call Complaint
+    nav_sms_complaint: 'SMS शिकायत',
+    nav_call_complaint: 'कॉल शिकायत',
+    sms_page_title: 'SMS से शिकायत दर्ज करें',
+    sms_page_desc: 'बिना ऐप, बिना इंटरनेट — सिर्फ एक SMS भेजकर नगरपालिका शिकायत दर्ज करें।',
+    call_page_title: 'कॉल करके शिकायत दर्ज करें',
+    call_page_desc: 'बस एक कॉल करें और अपनी शिकायत बोलें। IVR सिस्टम आपकी आवाज़ रिकॉर्ड करेगा।'
   }
 };
 
