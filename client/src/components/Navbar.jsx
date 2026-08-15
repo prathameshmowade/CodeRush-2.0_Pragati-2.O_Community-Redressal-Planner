@@ -19,7 +19,8 @@ import {
   Phone,
   ChevronDown,
   Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  ChevronRight
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -33,11 +34,23 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
   const isChannelActive = isActive('/sms-complaint') || isActive('/call-complaint');
 
-  // Close dropdowns on outside click or route change
+  // Close menus on outside click or route change
   useEffect(() => {
     setMobileMenuOpen(false);
     setChannelsDropdownOpen(false);
   }, [location.pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -52,21 +65,37 @@ export default function Navbar() {
   return (
     <>
       {/* Top Header Navbar */}
-      <nav className="bg-white/95 dark:bg-emerald-950/95 backdrop-blur-md border-b border-emerald-100 dark:border-emerald-900 sticky top-0 z-50 px-3 sm:px-4 lg:px-6 py-2.5 shadow-xs transition-colors">
+      <nav className="bg-white/95 dark:bg-emerald-950/95 backdrop-blur-md border-b border-emerald-100 dark:border-emerald-900 sticky top-0 z-40 px-3 sm:px-4 lg:px-6 py-2 shadow-xs transition-colors">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-            <img src="/logo.png" alt="awaaz.ai logo" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
-            <div className="flex flex-col leading-none">
-              <span className="font-black text-emerald-950 dark:text-white text-lg tracking-tight flex items-center gap-1">
-                <span>awaaz</span>
-                <span className="text-emerald-600 font-extrabold">.ai</span>
-              </span>
-              <span className="text-[9.5px] font-bold tracking-wide text-emerald-700 dark:text-emerald-400 mt-0.5 truncate max-w-[130px] sm:max-w-none">
-                {t('brand_slogan')}
-              </span>
-            </div>
-          </Link>
+          
+          {/* Left Area on Mobile / Desktop */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* 3-Line Hamburger Button (Visible only on mobile/tablet < 1200px) */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="navbar-mobile-toggle p-2 rounded-xl bg-emerald-50 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-800 transition-all shrink-0 active:scale-95"
+              aria-label="Open mobile navigation menu"
+              title="Open Menu"
+            >
+              <Menu className="w-5 h-5 text-emerald-700 dark:text-emerald-300" />
+            </button>
+
+            {/* Brand Logo */}
+            <Link to="/" className="flex items-center gap-2 shrink-0 group">
+              <img src="/logo.png" alt="awaaz.ai logo" className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105" />
+              <div className="flex flex-col leading-none">
+                <span className="font-black text-emerald-950 dark:text-white text-base sm:text-lg tracking-tight flex items-center gap-0.5">
+                  <span>awaaz</span>
+                  <span className="text-emerald-600 font-extrabold">.ai</span>
+                </span>
+                {/* Slogan visible on sm+ screens */}
+                <span className="hidden sm:block text-[9.5px] font-bold tracking-wide text-emerald-700 dark:text-emerald-400 mt-0.5 truncate max-w-[140px] md:max-w-none">
+                  {t('brand_slogan')}
+                </span>
+              </div>
+            </Link>
+          </div>
 
           {/* Desktop Navigation Links (>= 1200px) */}
           <div className="navbar-desktop items-center gap-1 xl:gap-1.5 text-xs font-semibold shrink-0">
@@ -235,176 +264,237 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Header Controls (< 1200px) */}
-          <div className="navbar-mobile-toggle items-center gap-1.5 sm:gap-2">
+          {/* Right Header Controls on Mobile (< 1200px) */}
+          <div className="navbar-mobile-toggle items-center gap-1.5">
             <LanguageToggle />
             <ThemeToggle />
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700 hover:bg-emerald-100 transition"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
+
         </div>
       </nav>
 
-      {/* Mobile Drawer Menu (< 1200px) */}
+      {/* Left-Side Off-Canvas Mobile Drawer (< 1200px) */}
       {mobileMenuOpen && (
-        <div className="navbar-mobile-toggle flex-col bg-white/98 dark:bg-emerald-950/98 backdrop-blur-lg border-b border-emerald-200 dark:border-emerald-800 px-4 py-4 space-y-4 shadow-2xl z-40 fixed top-[57px] left-0 right-0 max-h-[85vh] overflow-y-auto animate-in slide-in-from-top duration-200">
-          {/* User Profile Card if logged in */}
-          {user ? (
-            <div className="bg-emerald-50/80 dark:bg-emerald-900/60 p-3.5 rounded-2xl border border-emerald-200 dark:border-emerald-800 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-md">
-                  {user.name ? user.name.charAt(0) : 'U'}
-                </div>
-                <div>
-                  <span className="text-sm font-bold text-emerald-950 dark:text-white block leading-tight">{user.name}</span>
-                  <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-mono capitalize">
-                    {user.role} {user.department ? `• ${user.department}` : ''}
+        <div className="navbar-mobile-toggle fixed inset-0 z-50">
+          {/* Dimmed Backdrop Overlay */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Drawer Panel Sliding from LEFT */}
+          <div className="fixed inset-y-0 left-0 w-[290px] sm:w-[320px] max-w-[85vw] bg-white dark:bg-emerald-950 border-r border-emerald-200 dark:border-emerald-800 p-5 flex flex-col justify-between shadow-2xl z-50 animate-in slide-in-from-left duration-250 overflow-y-auto">
+            
+            {/* Drawer Content Top */}
+            <div className="space-y-4">
+              {/* Drawer Header: Logo + Close X Button */}
+              <div className="flex items-center justify-between pb-3 border-b border-emerald-100 dark:border-emerald-900">
+                <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
+                  <img src="/logo.png" alt="awaaz.ai logo" className="h-8 w-auto object-contain" />
+                  <span className="font-black text-emerald-950 dark:text-white text-lg tracking-tight">
+                    awaaz<span className="text-emerald-600 font-extrabold">.ai</span>
                   </span>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700 hover:bg-emerald-100 transition"
+                  aria-label="Close menu"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* User Profile Card if logged in */}
+              {user ? (
+                <div className="bg-emerald-50/90 dark:bg-emerald-900/60 p-3 rounded-2xl border border-emerald-200 dark:border-emerald-800 space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+                      {user.name ? user.name.charAt(0) : 'U'}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-xs font-bold text-emerald-950 dark:text-white block truncate">{user.name}</span>
+                      <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-mono capitalize block truncate">
+                        {user.role} {user.department ? `• ${user.department}` : ''}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { logout(); setMobileMenuOpen(false); }}
+                    className="w-full bg-white dark:bg-emerald-950 text-red-600 border border-red-200 dark:border-red-900/50 hover:bg-red-50 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>{t('nav_logout')}</span>
+                  </button>
                 </div>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full btn-emerald text-xs py-2.5 justify-center shadow-md"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>{t('nav_login')}</span>
+                </Link>
+              )}
+
+              {/* Section 1: Main Portals */}
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider px-1 block">
+                  {isHindi ? 'नगर पालिका सेवाएं' : 'Municipal Services'}
+                </span>
+
+                <Link
+                  to="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
+                    isActive('/')
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-emerald-950 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Home className="w-4 h-4" />
+                    <span>{t('nav_overview')}</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+                </Link>
+
+                {(!user || user.role === 'citizen' || user.role === 'resident') && (
+                  <Link
+                    to="/citizen"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
+                      isActive('/citizen')
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'text-emerald-950 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <FileEdit className="w-4 h-4" />
+                      <span>{t('nav_citizen')}</span>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+                  </Link>
+                )}
+
+                {user && (user.role === 'officer' || user.role === 'admin') && (
+                  <Link
+                    to="/officer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
+                      isActive('/officer')
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'text-emerald-950 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <LayoutDashboard className="w-4 h-4" />
+                      <span>{t('nav_officer')}</span>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+                  </Link>
+                )}
+
+                <Link
+                  to="/digital-twin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
+                    isActive('/digital-twin')
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-emerald-950 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Building2 className="w-4 h-4" />
+                    <span>{t('nav_digital_twin')}</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+                </Link>
+
+                <Link
+                  to="/analytics"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
+                    isActive('/analytics')
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-emerald-950 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <BarChart3 className="w-4 h-4" />
+                    <span>{t('nav_analytics')}</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+                </Link>
               </div>
-              <button
-                type="button"
-                onClick={logout}
-                className="bg-white dark:bg-emerald-950 text-red-600 border border-red-200 dark:border-red-900/50 hover:bg-red-50 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>{t('nav_logout')}</span>
-              </button>
+
+              {/* Section 2: Direct Citizen Intake Channels */}
+              <div className="space-y-1 pt-2 border-t border-emerald-100 dark:border-emerald-900">
+                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider px-1 block">
+                  {isHindi ? 'प्रत्यक्ष शिकायत चैनल' : 'Direct Intake Channels'}
+                </span>
+
+                <Link
+                  to="/sms-complaint"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
+                    isActive('/sms-complaint')
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-emerald-950 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <MessageSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <div>
+                      <span className="block leading-tight">{t('nav_sms_complaint')}</span>
+                      <span className="text-[9.5px] opacity-75 font-normal block">
+                        {isHindi ? 'SMS टेक्स्ट शिकायत' : 'Text SMS Reporting'}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[9px] bg-emerald-100 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-200 px-1.5 py-0.5 rounded font-mono font-bold">
+                    SMS
+                  </span>
+                </Link>
+
+                <Link
+                  to="/call-complaint"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
+                    isActive('/call-complaint')
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-emerald-950 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Phone className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                    <div>
+                      <span className="block leading-tight">{t('nav_call_complaint')}</span>
+                      <span className="text-[9.5px] opacity-75 font-normal block">
+                        {isHindi ? 'वॉयस हेल्पलाइन' : '24/7 Voice IVR'}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[9px] bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 px-1.5 py-0.5 rounded font-mono font-bold">
+                    IVR
+                  </span>
+                </Link>
+              </div>
             </div>
-          ) : (
-            <Link
-              to="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full btn-emerald text-xs py-2.5 justify-center shadow-md"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>{t('nav_login')}</span>
-            </Link>
-          )}
 
-          {/* Section 1: Main Portals */}
-          <div className="space-y-1">
-            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider px-2 block">
-              {isHindi ? 'नगर पालिका सेवाएं' : 'Municipal Services'}
-            </span>
-
-            <Link
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition ${
-                isActive('/')
-                  ? 'bg-emerald-100/80 dark:bg-emerald-900 text-emerald-950 dark:text-white'
-                  : 'text-emerald-900 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40'
-              }`}
-            >
-              <Home className="w-4 h-4 text-emerald-600" />
-              <span>{t('nav_overview')}</span>
-            </Link>
-
-            {(!user || user.role === 'citizen' || user.role === 'resident') && (
-              <Link
-                to="/citizen"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition ${
-                  isActive('/citizen')
-                    ? 'bg-emerald-100/80 dark:bg-emerald-900 text-emerald-950 dark:text-white'
-                    : 'text-emerald-900 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40'
-                }`}
-              >
-                <FileEdit className="w-4 h-4 text-emerald-600" />
-                <span>{t('nav_citizen')}</span>
-              </Link>
-            )}
-
-            {user && (user.role === 'officer' || user.role === 'admin') && (
-              <Link
-                to="/officer"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition ${
-                  isActive('/officer')
-                    ? 'bg-emerald-100/80 dark:bg-emerald-900 text-emerald-950 dark:text-white'
-                    : 'text-emerald-900 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40'
-                }`}
-              >
-                <LayoutDashboard className="w-4 h-4 text-emerald-600" />
-                <span>{t('nav_officer')}</span>
-              </Link>
-            )}
-
-            <Link
-              to="/digital-twin"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition ${
-                isActive('/digital-twin')
-                  ? 'bg-emerald-100/80 dark:bg-emerald-900 text-emerald-950 dark:text-white'
-                  : 'text-emerald-900 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40'
-              }`}
-            >
-              <Building2 className="w-4 h-4 text-emerald-600" />
-              <span>{t('nav_digital_twin')}</span>
-            </Link>
-
-            <Link
-              to="/analytics"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition ${
-                isActive('/analytics')
-                  ? 'bg-emerald-100/80 dark:bg-emerald-900 text-emerald-950 dark:text-white'
-                  : 'text-emerald-900 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40'
-              }`}
-            >
-              <BarChart3 className="w-4 h-4 text-emerald-600" />
-              <span>{t('nav_analytics')}</span>
-            </Link>
-          </div>
-
-          {/* Section 2: Direct Intake Channels */}
-          <div className="space-y-1 pt-2 border-t border-emerald-100 dark:border-emerald-900">
-            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider px-2 block">
-              {isHindi ? 'प्रत्यक्ष शिकायत चैनल' : 'Direct Intake Channels'}
-            </span>
-
-            <Link
-              to="/sms-complaint"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
-                isActive('/sms-complaint')
-                  ? 'bg-emerald-100/80 dark:bg-emerald-900 text-emerald-950 dark:text-white'
-                  : 'text-emerald-900 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <MessageSquare className="w-4 h-4 text-emerald-600" />
-                <span>{t('nav_sms_complaint')}</span>
-              </div>
-              <span className="text-[9px] bg-emerald-100 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-200 px-2 py-0.5 rounded-full font-bold">
-                SMS
+            {/* Drawer Footer Info */}
+            <div className="pt-3 border-t border-emerald-100 dark:border-emerald-900 text-center space-y-1">
+              <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 block">
+                🏛️ Nagpur Municipal Redressal
               </span>
-            </Link>
-
-            <Link
-              to="/call-complaint"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition ${
-                isActive('/call-complaint')
-                  ? 'bg-emerald-100/80 dark:bg-emerald-900 text-emerald-950 dark:text-white'
-                  : 'text-emerald-900 dark:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-purple-600" />
-                <span>{t('nav_call_complaint')}</span>
-              </div>
-              <span className="text-[9px] bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 px-2 py-0.5 rounded-full font-bold">
-                IVR
+              <span className="text-[9px] text-emerald-600 dark:text-emerald-500 font-mono block">
+                Pragati 2.0 • CodeRush 2.0
               </span>
-            </Link>
+            </div>
+
           </div>
         </div>
       )}
