@@ -60,9 +60,8 @@ html, body {
 }
 
 /* Responsive Navbar Media Query Rules */
-@media (min-width: 992px) {
-  .navbar-mobile-toggle,
-  .mobile-bottom-nav {
+@media (min-width: 1200px) {
+  .navbar-mobile-toggle {
     display: none !important;
   }
   .navbar-desktop {
@@ -70,18 +69,12 @@ html, body {
   }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1199px) {
   .navbar-desktop {
     display: none !important;
   }
   .navbar-mobile-toggle {
     display: flex !important;
-  }
-  .mobile-bottom-nav {
-    display: flex !important;
-  }
-  body {
-    padding-bottom: 5rem;
   }
 }
 
