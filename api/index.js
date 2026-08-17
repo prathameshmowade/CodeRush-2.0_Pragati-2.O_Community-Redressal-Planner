@@ -381,5 +381,91 @@ app.get('/api/call/complaints', (req, res) => {
   res.json({ success: true, count: callComplaints.length, data: callComplaints });
 });
 
-module.exports = app;
+// ===== Google OAuth + Email OTP (Vercel Serverless) =====
+const emailOtpStore = {};
 
+app.post('/api/auth/google', async (req, res) => {
+  try {
+    const { credential, userInfo } = req.body;
+    if (!credential && !userInfo) {
+      return res.status(400).json({ success: false, error: 'Google credential or user info is required.' });
+    }
+
+    let email, name, picture;
+
+    if (userInfo && userInfo.email) {
+      if (!userInfo.email_verified) {
+        return res.status(403).json({ success: false, error: 'Your Google account email is not verified.' });
+      }
+      email = userInfo.email;
+      name = userInfo.name || email.split('@')[0];
+      picture = userInfo.picture || '';
+    } else {
+      return res.status(401).json({ success: false, error: 'Invalid Google credential.' });
+    }
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    emailOtpStore[email.toLowerCase()] = {
+      otp, name, picture,
+      expiresAt: Date.now() + 10 * 60 * 1000
+    };
+
+    // In Vercel, email sending requires configured transporter (optional)
+    // For demo: return OTP in response
+    return res.json({
+      success: true,
+      email: email.toLowerCase(),
+      name, picture,
+      message: `Demo mode: Use OTP ${otp}`,
+      demoOtp: otp
+    });
+  } catch (err) {
+    console.error('[AUTH] Google login error:', err);
+    res.status(500).json({ success: false, error: 'Internal server error.' });
+  }
+});
+
+app.post('/api/auth/google-verify-otp', (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, error: 'Email and OTP are required.' });
+    }
+
+    const stored = emailOtpStore[email.toLowerCase()];
+    if (!stored) {
+      return res.status(400).json({ success: false, error: 'No OTP found. Please sign in with Google first.' });
+    }
+
+    if (Date.now() > stored.expiresAt) {
+      delete emailOtpStore[email.toLowerCase()];
+      return res.status(400).json({ success: false, error: 'OTP has expired.' });
+    }
+
+    if (stored.otp !== String(otp).trim()) {
+      return res.status(400).json({ success: false, error: 'Invalid OTP.' });
+    }
+
+    delete emailOtpStore[email.toLowerCase()];
+
+    const citizenId = `CIT-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    return res.json({
+      success: true,
+      user: {
+        citizenId,
+        name: stored.name,
+        email: email.toLowerCase(),
+        picture: stored.picture,
+        role: 'citizen',
+        authProvider: 'google',
+        lastLoginAt: new Date().toISOString()
+      },
+      message: 'Email OTP verified! You are now logged in.'
+    });
+  } catch (err) {
+    console.error('[AUTH] OTP verification error:', err);
+    res.status(500).json({ success: false, error: 'Internal server error.' });
+  }
+});
+
+module.exports = app;
